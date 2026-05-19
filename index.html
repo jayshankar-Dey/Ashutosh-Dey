@@ -1,449 +1,2225 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Ashutosh Dey | Wildlife Researcher & Conservation Biologist</title>
-  <link rel="icon" type="image/png" href="ad.png">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>Ashutosh Dey | Wildlife Researcher & Conservation Biologist</title>
+    <link rel="icon" type="image/png" href="ad.png" />
 
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
 
-  <!-- GSAP CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/SplitText.min.js"></script>
+    <!-- GSAP CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/SplitText.min.js"></script>
 
-  <style>
-    :root {
-      --forest: #0d2818;
-      --moss: #1a4a2e;
-      --fern: #2d6a4f;
-      --sage: #52b788;
-      --glow: #b7e4c7;
-      --firefly: #d4ff7d;
-      --amber: #f4a261;
-      --cream: #fefae0;
-      --ink: #081c15;
-    }
+    <style>
+      :root {
+        --forest: #0d2818;
+        --moss: #1a4a2e;
+        --fern: #2d6a4f;
+        --sage: #52b788;
+        --glow: #b7e4c7;
+        --firefly: #d4ff7d;
+        --amber: #f4a261;
+        --cream: #fefae0;
+        --ink: #081c15;
+      }
 
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: auto; }
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: auto;
+      }
 
-    body {
-      background: var(--ink);
-      color: var(--cream);
-      font-family: 'DM Mono', monospace;
-      overflow-x: hidden;
-      cursor: none;
-    }
+      body {
+        background: var(--ink);
+        color: var(--cream);
+        font-family: "DM Mono", monospace;
+        overflow-x: hidden;
+        cursor: none;
+      }
 
-    /* ── CUSTOM CURSOR ── */
-    .cursor-dot {
-      position: fixed;
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: var(--firefly);
-      pointer-events: none;
-      z-index: 9999;
-      transform: translate(-50%,-50%);
-      mix-blend-mode: difference;
-      transition: transform .1s;
-    }
-    .cursor-ring {
-      position: fixed;
-      width: 36px; height: 36px;
-      border-radius: 50%;
-      border: 1px solid rgba(212,255,125,.5);
-      pointer-events: none;
-      z-index: 9998;
-      transform: translate(-50%,-50%);
-      transition: transform .15s, width .3s, height .3s, border-color .3s;
-    }
-    body.hover-active .cursor-ring {
-      width: 60px; height: 60px;
-      border-color: var(--firefly);
-    }
-
-    /* ── LOADING SCREEN ── */
-    #loader {
-      position: fixed;
-      inset: 0;
-      background: var(--ink);
-      z-index: 10000;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 2rem;
-    }
-    .loader-text {
-      font-family: 'Syne', sans-serif;
-      font-size: 1rem;
-      font-weight: 800;
-      letter-spacing: .3em;
-      color: var(--firefly);
-      text-transform: uppercase;
-    }
-    .loader-bar-wrap {
-      width: 200px;
-      height: 1px;
-      background: rgba(82,183,136,.2);
-    }
-    .loader-bar {
-      height: 100%;
-      background: var(--firefly);
-      width: 0%;
-      box-shadow: 0 0 12px rgba(212,255,125,.6);
-    }
-    .loader-percent {
-      font-size: .65rem;
-      letter-spacing: .2em;
-      color: var(--sage);
-    }
-    .loader-firefly {
-      font-size: 2rem;
-      animation: pulseGlow 1s infinite;
-    }
-    @keyframes pulseGlow {
-      0%, 100% { filter: drop-shadow(0 0 4px rgba(212,255,125,.4)); }
-      50% { filter: drop-shadow(0 0 16px rgba(212,255,125,.9)); }
-    }
-
-    /* ── NAV (enhanced mobile) ── */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      padding: 1.4rem 4rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      transition: padding .4s, background .4s;
-    }
-    nav.scrolled {
-      padding: .9rem 4rem;
-      background: rgba(8,28,21,0.92);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(183,228,199,.07);
-    }
-    .nav-logo {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      font-size: 1.1rem;
-      color: var(--firefly);
-      letter-spacing: .1em;
-      text-decoration: none;
-    }
-    .nav-links {
-      display: flex;
-      gap: 2.8rem;
-      list-style: none;
-      transition: transform 0.4s ease, opacity 0.3s ease;
-    }
-    .nav-links a {
-      font-size: .68rem;
-      letter-spacing: .18em;
-      text-transform: uppercase;
-      color: var(--glow);
-      text-decoration: none;
-      opacity: .65;
-      transition: opacity .3s, color .3s;
-      position: relative;
-    }
-    .nav-links a::after {
-      content: '';
-      position: absolute;
-      bottom: -4px; left: 0; right: 0;
-      height: 1px;
-      background: var(--firefly);
-      transform: scaleX(0);
-      transition: transform .3s;
-    }
-    .nav-links a:hover { opacity: 1; color: var(--firefly); }
-    .nav-links a:hover::after { transform: scaleX(1); }
-
-    /* Mobile menu button */
-    .menu-icon {
-      display: none;
-      flex-direction: column;
-      justify-content: space-between;
-      width: 28px;
-      height: 20px;
-      cursor: pointer;
-      z-index: 102;
-      position: relative;
-    }
-    .menu-icon span {
-      display: block;
-      height: 2px;
-      background: var(--firefly);
-      border-radius: 2px;
-      transition: all 0.3s ease;
-    }
-    .menu-icon.open span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
-    .menu-icon.open span:nth-child(2) { opacity: 0; }
-    .menu-icon.open span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
-
-    
-
-    @media (max-width: 1000px) {
-      .menu-icon { display: flex; }
-      .nav-links {
+      /* ── CUSTOM CURSOR ── */
+      .cursor-dot {
         position: fixed;
-        top: 0; left: 0;
-        width: 100%;
-        height: 100vh;
-        background: rgba(8,28,21,0.98);
-        backdrop-filter: blur(16px);
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--firefly);
+        pointer-events: none;
+        z-index: 9999;
+        transform: translate(-50%, -50%);
+        mix-blend-mode: difference;
+        transition: transform 0.1s;
+      }
+      .cursor-ring {
+        position: fixed;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 1px solid rgba(212, 255, 125, 0.5);
+        pointer-events: none;
+        z-index: 9998;
+        transform: translate(-50%, -50%);
+        transition:
+          transform 0.15s,
+          width 0.3s,
+          height 0.3s,
+          border-color 0.3s;
+      }
+      body.hover-active .cursor-ring {
+        width: 60px;
+        height: 60px;
+        border-color: var(--firefly);
+      }
+
+      /* ── LOADING SCREEN ── */
+      #loader {
+        position: fixed;
+        inset: 0;
+        background: var(--ink);
+        z-index: 10000;
+        display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         gap: 2rem;
-        transform: translateX(100%);
-        opacity: 0;
-        pointer-events: none;
-        transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1), opacity 0.2s;
-        z-index: 101;
       }
-      .nav-links.open {
-        transform: translateX(0);
+      .loader-text {
+        font-family: "Syne", sans-serif;
+        font-size: 1rem;
+        font-weight: 800;
+        letter-spacing: 0.3em;
+        color: var(--firefly);
+        text-transform: uppercase;
+      }
+      .loader-bar-wrap {
+        width: 200px;
+        height: 1px;
+        background: rgba(82, 183, 136, 0.2);
+      }
+      .loader-bar {
+        height: 100%;
+        background: var(--firefly);
+        width: 0%;
+        box-shadow: 0 0 12px rgba(212, 255, 125, 0.6);
+      }
+      .loader-percent {
+        font-size: 0.65rem;
+        letter-spacing: 0.2em;
+        color: var(--sage);
+      }
+      .loader-firefly {
+        font-size: 2rem;
+        animation: pulseGlow 1s infinite;
+      }
+      @keyframes pulseGlow {
+        0%,
+        100% {
+          filter: drop-shadow(0 0 4px rgba(212, 255, 125, 0.4));
+        }
+        50% {
+          filter: drop-shadow(0 0 16px rgba(212, 255, 125, 0.9));
+        }
+      }
+
+      /* ── NAV (enhanced mobile) ── */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        padding: 1.4rem 4rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition:
+          padding 0.4s,
+          background 0.4s;
+      }
+      nav.scrolled {
+        padding: 0.9rem 4rem;
+        background: rgba(8, 28, 21, 0.92);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(183, 228, 199, 0.07);
+      }
+      .nav-logo {
+        font-family: "Syne", sans-serif;
+        font-weight: 800;
+        font-size: 1.1rem;
+        color: var(--firefly);
+        letter-spacing: 0.1em;
+        text-decoration: none;
+      }
+      .nav-links {
+        display: flex;
+        gap: 2.8rem;
+        list-style: none;
+        transition:
+          transform 0.4s ease,
+          opacity 0.3s ease;
+      }
+      .nav-links a {
+        font-size: 0.68rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--glow);
+        text-decoration: none;
+        opacity: 0.65;
+        transition:
+          opacity 0.3s,
+          color 0.3s;
+        position: relative;
+      }
+      .nav-links a::after {
+        content: "";
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: var(--firefly);
+        transform: scaleX(0);
+        transition: transform 0.3s;
+      }
+      .nav-links a:hover {
         opacity: 1;
-        pointer-events: all;
+        color: var(--firefly);
       }
-      .nav-links a { font-size: 1rem; letter-spacing: .2em; opacity: 1; }
-      nav { padding: 1rem 5vw; }
-      nav.scrolled { padding: .8rem 5vw; }
-    }
+      .nav-links a:hover::after {
+        transform: scaleX(1);
+      }
 
-    /* rest of original styles (unchanged design) */
-    #hero { position: relative; height: 100vh; display: flex; align-items: center; overflow: hidden; }
-    .hero-bg { position: absolute; inset: 0; background-image: url('https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?w=1600&q=80'); background-size: cover; background-position: center; filter: brightness(.3) saturate(1.3); will-change: transform; }
-    .hero-overlay { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(8,28,21,.9) 0%, rgba(13,40,24,.55) 55%, rgba(29,77,66,.25) 100%); }
-    .hero-noise { position: absolute; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; opacity: .4; }
-    .firefly-particles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
-    .particle { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: var(--firefly); box-shadow: 0 0 6px 2px rgba(212,255,125,.6); opacity: 0; }
-    .hero-content { position: relative; z-index: 2; padding: 0 10vw; max-width: 1000px;margin-top: 3rem; }
-    .hero-tag { display: inline-flex; align-items: center; gap: .6rem; font-size: .65rem; letter-spacing: .25em; text-transform: uppercase; color: var(--firefly); border: 1px solid rgba(212,255,125,.25); padding: .4rem 1rem; border-radius: 2px; margin-bottom: 2.5rem; opacity: 0; }
-    .hero-name { font-family: 'Cormorant Garamond', serif; font-size: clamp(4rem, 9vw, 8rem); font-weight: 300; line-height: .95; letter-spacing: -.02em; color: var(--cream); overflow: hidden; }
-    .hero-name-line { display: block; overflow: hidden; }
-    .hero-name-inner { display: block; transform: translateY(100%); }
-    .hero-name em { font-style: italic; color: var(--sage); }
-    .hero-title { margin-top: 2rem; font-size: .75rem; letter-spacing: .22em; text-transform: uppercase; color: var(--glow); opacity: 0; }
-    .hero-desc { margin-top: 1.8rem; font-family: 'Cormorant Garamond', serif; font-size: 1.35rem; font-weight: 300; line-height: 1.55; color: rgba(254,250,224,.7); max-width: 540px; opacity: 0; }
-    .hero-cta { margin-top: 3rem; display: flex; gap: 1.4rem; opacity: 0; flex-wrap: wrap; }
-    .btn-primary, .btn-ghost { display: inline-block; padding: .9rem 2.4rem; background: var(--firefly); color: var(--ink); font-family: 'DM Mono', monospace; font-size: .7rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; text-decoration: none; border-radius: 2px; transition: transform .25s, box-shadow .25s; }
-    .btn-ghost { background: transparent; border: 1px solid rgba(183,228,199,.35); color: var(--glow); }
-    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(212,255,125,.35); }
-    .btn-ghost:hover { border-color: var(--firefly); color: var(--firefly); transform: translateY(-3px); }
-    .hero-scroll { position: absolute; bottom: 3rem; left: 10vw; display: flex; align-items: center; gap: 1rem; opacity: 0; }
-    .scroll-line { width: 60px; height: 1px; background: linear-gradient(to right, transparent, var(--sage)); transform-origin: left; }
-    .scroll-label { font-size: .6rem; letter-spacing: .22em; text-transform: uppercase; color: var(--sage); }
-    #h-scroll-outer { position: relative; }
-    #h-scroll-inner { position: sticky; top: 0; height: 100vh; overflow: hidden; display: flex; align-items: center; background: var(--moss); }
-    .h-scroll-label { position: absolute; top: 3.5rem; left: 10vw; font-size: .62rem; letter-spacing: .3em; text-transform: uppercase; color: var(--firefly); opacity: .8; z-index: 5; }
-    .h-scroll-track { display: flex; gap: 2.5vw; padding: 0 10vw; will-change: transform; }
-    .h-card { flex-shrink: 0; width: 380px; background: rgba(8,28,21,.6); border: 1px solid rgba(82,183,136,.15); border-radius: 8px; overflow: hidden; transition: border-color .3s; }
-    .h-card:hover { border-color: rgba(212,255,125,.4); }
-    .h-card img { width: 100%; height: 220px; object-fit: cover; filter: brightness(.75) saturate(1.2); transition: filter .5s, transform .5s; }
-    .h-card:hover img { filter: brightness(.9) saturate(1.3); transform: scale(1.04); }
-    .h-card-body { padding: 2rem; }
-    .h-card-tag { font-size: .6rem; letter-spacing: .2em; text-transform: uppercase; color: var(--firefly); margin-bottom: .6rem; }
-    .h-card-title { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: var(--cream); line-height: 1.25; margin-bottom: .8rem; }
-    .h-card-desc { font-size: .73rem; color: rgba(254,250,224,.6); line-height: 1.7; }
-    .h-progress { position: absolute; bottom: 3.5rem; left: 10vw; display: flex; align-items: center; gap: 1.2rem; z-index: 5; }
-    .h-progress-bar { width: 120px; height: 2px; background: rgba(82,183,136,.2); border-radius: 2px; overflow: hidden; }
-    .h-progress-fill { height: 100%; background: var(--firefly); width: 0%; transition: width .1s linear; }
-    .h-progress-label { font-size: .62rem; letter-spacing: .15em; color: var(--sage); }
-    section { padding: 8rem 10vw; }
-    .section-label { font-size: .62rem; letter-spacing: .32em; text-transform: uppercase; color: var(--firefly); opacity: .85; margin-bottom: 1rem; }
-    .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.4rem, 4.5vw, 3.8rem); font-weight: 300; line-height: 1.1; color: var(--cream); overflow: hidden; }
-    .section-title em { font-style: italic; color: var(--sage); }
-    .divider { width: 0px; height: 1px; background: linear-gradient(to right, var(--sage), transparent); margin: 2.2rem 0; }
-    .stats-strip { background: rgba(13,40,24,.9); border-top: 1px solid rgba(82,183,136,.1); border-bottom: 1px solid rgba(82,183,136,.1); padding: 3.5rem 10vw; display: grid; grid-template-columns: repeat(4, 1fr); text-align: center; gap: 0; }
-    .stat-item + .stat-item { border-left: 1px solid rgba(82,183,136,.1); }
-    .stat-num { font-family: 'Syne', sans-serif; font-size: 3.2rem; font-weight: 800; color: var(--firefly); line-height: 1; margin-bottom: .5rem; }
-    .stat-lbl { font-size: .62rem; letter-spacing: .2em; text-transform: uppercase; color: var(--sage); opacity: .75; }
-    #about { background: var(--forest); display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; }
-    .about-img-wrap { position: relative; }
-    .about-img { width: 100%; aspect-ratio: 4/5; object-fit: cover; border-radius: 4px; filter: saturate(1.1); display: block; }
-    .about-img-frame { position: absolute; inset: -14px -14px 14px 14px; border: 1px solid rgba(82,183,136,.22); border-radius: 4px; pointer-events: none; transform: scale(0); transform-origin: top left; }
-    .about-badge { position: absolute; bottom: -20px; right: -20px; background: var(--firefly); color: var(--ink); padding: 1.3rem 1.6rem; border-radius: 4px; text-align: center; transform: scale(0) rotate(6deg); }
-    .badge-num { font-family: 'Syne', sans-serif; font-size: 2.2rem; font-weight: 800; display: block; line-height: 1; }
-    .badge-lbl { font-size: .58rem; letter-spacing: .14em; text-transform: uppercase; font-weight: 500; }
-    .about-text { font-family: 'Cormorant Garamond', serif; font-size: 1.18rem; line-height: 1.9; color: rgba(254,250,224,.8); margin-bottom: 1.5rem; transform: translateY(30px); opacity: 0; }
-    .interest-tags { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 1.8rem; }
-    .tag { font-size: .62rem; letter-spacing: .12em; text-transform: uppercase; color: var(--sage); border: 1px solid rgba(82,183,136,.25); padding: .4rem 1rem; border-radius: 2px; background: rgba(82,183,136,.04); transition: background .25s, color .25s, transform .25s, border-color .25s; transform: translateY(20px); opacity: 0; }
-    .tag:hover { background: rgba(82,183,136,.15); color: var(--firefly); transform: translateY(-2px) !important; border-color: rgba(212,255,125,.4); }
-    #experience { background: var(--ink); }
-    .exp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 4rem; }
-    .exp-card { background: rgba(26,74,46,.2); border: 1px solid rgba(82,183,136,.1); border-radius: 8px; overflow: hidden; transform: translateY(60px); opacity: 0; transition: border-color .3s; }
-    .exp-card:hover { border-color: rgba(82,183,136,.35); }
-    .exp-card-img { width: 100%; height: 210px; object-fit: cover; filter: saturate(1.1) brightness(.8); transition: filter .5s, transform .5s; display: block; }
-    .exp-card:hover .exp-card-img { filter: saturate(1.2) brightness(.95); transform: scale(1.04); }
-    .exp-card-body { padding: 2rem; }
-    .exp-card-role { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: var(--cream); margin-bottom: .4rem; }
-    .exp-card-org { font-size: .67rem; letter-spacing: .12em; color: var(--sage); text-transform: uppercase; margin-bottom: .3rem; }
-    .exp-card-date { font-size: .62rem; color: var(--firefly); opacity: .7; margin-bottom: 1.3rem; }
-    .exp-card-list { list-style: none; }
-    .exp-card-list li { font-size: .76rem; color: rgba(254,250,224,.65); line-height: 1.75; padding-left: 1.1rem; position: relative; }
-    .exp-card-list li::before { content: '▸'; position: absolute; left: 0; color: var(--sage); font-size: .6rem; top: .15em; }
-    .projects-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 4rem; }
-    .project-card { position: relative; border-radius: 6px; overflow: hidden; aspect-ratio: 16/10; cursor: default; opacity: 0; transform: scale(.95); }
-    .project-card img { width: 100%; height: 100%; object-fit: cover; filter: brightness(.5) saturate(1.2); transition: transform .7s, filter .7s; }
-    .project-card:hover img { transform: scale(1.08); filter: brightness(.4) saturate(1.3); }
-    .project-card-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(8,28,21,.95) 0%, transparent 60%); display: flex; flex-direction: column; justify-content: flex-end; padding: 2rem; }
-    .project-card-tag { font-size: .58rem; letter-spacing: .2em; text-transform: uppercase; color: var(--firefly); margin-bottom: .5rem; }
-    .project-card-title { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 400; color: var(--cream); line-height: 1.2; }
-    .project-card-desc { font-size: .72rem; color: rgba(254,250,224,.7); line-height: 1.65; margin-top: .6rem; max-height: 0; overflow: hidden; transition: max-height .5s cubic-bezier(.16,1,.3,1); }
-    .project-card:hover .project-card-desc { max-height: 120px; }
-    #publications { background: var(--ink); }
-    .pub-list { margin-top: 4rem; display: flex; flex-direction: column; }
-    .pub-item { display: grid; grid-template-columns: 80px 1fr; gap: 2.5rem; align-items: start; padding: 2.2rem 0; border-bottom: 1px solid rgba(82,183,136,.08); opacity: 0; transform: translateX(-40px); }
-    .pub-num { font-family: 'Syne', sans-serif; font-size: 3.2rem; font-weight: 800; color: rgba(82,183,136,.12); line-height: 1; transition: color .4s; }
-    .pub-item:hover .pub-num { color: rgba(212,255,125,.25); }
-    .pub-title { font-family: 'Cormorant Garamond', serif; font-size: 1.22rem; color: var(--cream); line-height: 1.4; margin-bottom: .55rem; }
-    .pub-authors { font-size: .7rem; color: var(--sage); letter-spacing: .05em; margin-bottom: .3rem; }
-    .pub-journal { font-size: .63rem; letter-spacing: .1em; text-transform: uppercase; color: rgba(254,250,224,.35); }
-    #conferences { background: var(--forest); }
-    .conf-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 4rem; }
-    .conf-card { background: rgba(8,28,21,.5); border: 1px solid rgba(82,183,136,.12); border-radius: 8px; overflow: hidden; transform: translateY(50px) scale(.97); opacity: 0; transition: transform .3s, border-color .3s; }
-    .conf-card:hover { transform: translateY(-5px) scale(1) !important; border-color: rgba(212,255,125,.35); }
-    .conf-card img { width: 100%; height: 170px; object-fit: cover; filter: brightness(.55) saturate(1.2); transition: filter .4s; }
-    .conf-card:hover img { filter: brightness(.7) saturate(1.3); }
-    .conf-card-body { padding: 1.6rem; }
-    .conf-icon { font-size: 1.6rem; margin-bottom: .8rem; }
-    .conf-title { font-family: 'Syne', sans-serif; font-size: .95rem; font-weight: 700; color: var(--cream); line-height: 1.3; margin-bottom: .55rem; }
-    .conf-desc { font-size: .72rem; color: rgba(254,250,224,.6); line-height: 1.65; }
-    .conf-badge { display: inline-block; margin-top: .9rem; font-size: .58rem; letter-spacing: .15em; text-transform: uppercase; color: var(--firefly); border: 1px solid rgba(212,255,125,.22); padding: .3rem .75rem; border-radius: 2px; }
-    #skills { background: var(--ink); }
-    .skills-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; margin-top: 4rem; }
-    .skill-row { margin-bottom: 2rem; }
-    .skill-label { display: flex; justify-content: space-between; font-size: .67rem; letter-spacing: .12em; text-transform: uppercase; color: var(--glow); margin-bottom: .65rem; opacity: 0; transform: translateX(-20px); }
-    .skill-bar { height: 2px; background: rgba(82,183,136,.1); border-radius: 2px; overflow: hidden; }
-    .skill-fill { height: 100%; background: linear-gradient(to right, var(--fern), var(--sage), var(--firefly)); border-radius: 2px; width: 0%; box-shadow: 0 0 8px rgba(212,255,125,.2); }
-    .skills-visual { position: relative; opacity: 0; transform: scale(.9); }
-    .skills-img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 50%; filter: saturate(1.3) brightness(.8); border: 2px solid rgba(82,183,136,.2); display: block; }
-    .skills-glow { position: absolute; inset: -30px; border-radius: 50%; background: radial-gradient(circle, rgba(82,183,136,.1) 0%, transparent 70%); animation: skillGlow 3s infinite; }
-    .skills-orbit { position: absolute; inset: -20px; border-radius: 50%; border: 1px dashed rgba(82,183,136,.15); animation: orbit 20s linear infinite; }
-    .skills-orbit-dot { position: absolute; top: -4px; left: 50%; width: 8px; height: 8px; border-radius: 50%; background: var(--firefly); transform: translateX(-50%); box-shadow: 0 0 10px rgba(212,255,125,.6); }
-    @keyframes skillGlow { 0%,100%{transform:scale(1); opacity:.8;} 50%{transform:scale(1.05); opacity:1;} }
-    @keyframes orbit { to{transform:rotate(360deg);} }
-    #contact { background: var(--forest); position: relative; overflow: hidden; }
-    #contact::before { content: ''; position: absolute; inset: 0; background-image: url('https://images.unsplash.com/photo-1448375240586-882707db888b?w=1600&q=80'); background-size: cover; background-position: center; filter: brightness(.12) saturate(1.3); }
-    .contact-inner { position: relative; z-index: 2; display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; }
-    .contact-item { display: flex; align-items: center; gap: 1.4rem; margin-bottom: 1.8rem; opacity: 0; transform: translateX(30px); }
-    .contact-icon { width: 46px; height: 46px; border-radius: 50%; background: rgba(82,183,136,.08); border: 1px solid rgba(82,183,136,.18); display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; transition: background .3s, border-color .3s; }
-    .contact-item:hover .contact-icon { background: rgba(212,255,125,.15); border-color: rgba(212,255,125,.4); }
-    .contact-lbl { font-size: .6rem; letter-spacing: .2em; text-transform: uppercase; color: var(--sage); margin-bottom: .2rem; }
-    .contact-val { font-size: .85rem; color: var(--cream); }
-    .contact-val a { color: var(--cream); text-decoration: none; transition: color .25s; }
-    .contact-val a:hover { color: var(--firefly); }
-    footer { background: var(--ink); padding: 3rem 10vw; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid rgba(82,183,136,.07); flex-wrap: wrap; gap: 1rem; }
-    .footer-copy { font-size: .65rem; letter-spacing: .1em; color: rgba(254,250,224,.3); }
-    .footer-firefly { font-size: .65rem; letter-spacing: .1em; color: var(--firefly); opacity: .55; }
-    .marquee-strip { background: var(--firefly); padding: .9rem 0; overflow: hidden; display: flex; }
-    .marquee-track { display: flex; gap: 0; animation: marquee 18s linear infinite; white-space: nowrap; }
-    .marquee-track span { color: var(--ink); font-size: .65rem; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; padding: 0 2.5rem; }
-    .marquee-track span.dot { color: rgba(8,28,21,.4); font-size: .8rem; padding: 0; }
-    @keyframes marquee { from{transform:translateX(0);} to{transform:translateX(-50%);} }
-    .scroll-progress { position: fixed; top: 0; left: 0; height: 2px; background: var(--firefly); width: 0%; z-index: 200; box-shadow: 0 0 8px rgba(212,255,125,.5); pointer-events: none; }
-    @media (max-width: 1000px) { section { padding: 6rem 6vw; } #about, .skills-inner, .contact-inner { grid-template-columns: 1fr; gap: 3.5rem; } .about-img-wrap { order: -1; } .exp-grid, .projects-grid, .conf-grid { grid-template-columns: 1fr; } .stats-strip { grid-template-columns: repeat(2, 1fr); gap: 2.5rem; } .stat-item + .stat-item { border-left: none; } .h-card { width: 320px; } }
-    @media (max-width: 600px) { .stats-strip { grid-template-columns: 1fr; } .stat-item + .stat-item { border-left: none; border-top: 1px solid rgba(82,183,136,.1); } .hero-cta { flex-direction: column; align-items: flex-start; } .btn-primary, .btn-ghost { text-align: center; width: 100%; } }
-  </style>
-</head>
-<body>
+      /* Mobile menu button */
+      .menu-icon {
+        display: none;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 28px;
+        height: 20px;
+        cursor: pointer;
+        z-index: 102;
+        position: relative;
+      }
+      .menu-icon span {
+        display: block;
+        height: 2px;
+        background: var(--firefly);
+        border-radius: 2px;
+        transition: all 0.3s ease;
+      }
+      .menu-icon.open span:nth-child(1) {
+        transform: translateY(9px) rotate(45deg);
+      }
+      .menu-icon.open span:nth-child(2) {
+        opacity: 0;
+      }
+      .menu-icon.open span:nth-child(3) {
+        transform: translateY(-9px) rotate(-45deg);
+      }
 
-<div id="loader"><div class="loader-firefly">🪲</div><div class="loader-text">Ashutosh Dey</div><div class="loader-bar-wrap"><div class="loader-bar" id="loaderBar"></div></div><div class="loader-percent" id="loaderPercent">0%</div></div>
-<div class="scroll-progress" id="scrollProgress"></div>
-<div class="cursor-dot" id="cursorDot"></div>
-<div class="cursor-ring" id="cursorRing"></div>
+      @media (max-width: 1000px) {
+        .menu-icon {
+          display: flex;
+        }
+        .nav-links {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100vh;
+          background: rgba(8, 28, 21, 0.98);
+          backdrop-filter: blur(16px);
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 2rem;
+          transform: translateX(100%);
+          opacity: 0;
+          pointer-events: none;
+          transition:
+            transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1),
+            opacity 0.2s;
+          z-index: 101;
+        }
+        .nav-links.open {
+          transform: translateX(0);
+          opacity: 1;
+          pointer-events: all;
+        }
+        .nav-links a {
+          font-size: 1rem;
+          letter-spacing: 0.2em;
+          opacity: 1;
+        }
+        nav {
+          padding: 1rem 5vw;
+        }
+        nav.scrolled {
+          padding: 0.8rem 5vw;
+        }
+      }
 
-<nav id="navbar">
-  <a class="nav-logo" href="#hero">A·DEY</a>
-  <div class="menu-icon" id="menuIcon"><span></span><span></span><span></span></div>
-  <ul class="nav-links" id="navLinks">
-    <li><a href="#about">About</a></li><li><a href="#experience">Experience</a></li><li><a href="#projects">Research</a></li>
-    <li><a href="#publications">Publications</a></li><li><a href="#conferences">Events</a></li><li><a href="#skills">Skills</a></li><li><a href="#contact">Contact</a></li>
-  </ul>
-</nav>
+      /* rest of original styles (unchanged design) */
+      #hero {
+        position: relative;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+      }
+      .hero-bg {
+        position: absolute;
+        inset: 0;
+        background-image: url("https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?w=1600&q=80");
+        background-size: cover;
+        background-position: center;
+        filter: brightness(0.3) saturate(1.3);
+        will-change: transform;
+      }
+      .hero-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(8, 28, 21, 0.9) 0%,
+          rgba(13, 40, 24, 0.55) 55%,
+          rgba(29, 77, 66, 0.25) 100%
+        );
+      }
+      .hero-noise {
+        position: absolute;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+        pointer-events: none;
+        opacity: 0.4;
+      }
+      .firefly-particles {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        pointer-events: none;
+      }
+      .particle {
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        background: var(--firefly);
+        box-shadow: 0 0 6px 2px rgba(212, 255, 125, 0.6);
+        opacity: 0;
+      }
+      .hero-content {
+        position: relative;
+        z-index: 2;
+        padding: 0 10vw;
+        max-width: 1000px;
+        margin-top: 3rem;
+      }
+      .hero-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-size: 0.65rem;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        color: var(--firefly);
+        border: 1px solid rgba(212, 255, 125, 0.25);
+        padding: 0.4rem 1rem;
+        border-radius: 2px;
+        margin-bottom: 2.5rem;
+        opacity: 0;
+      }
+      .hero-name {
+        font-family: "Cormorant Garamond", serif;
+        font-size: clamp(4rem, 9vw, 8rem);
+        font-weight: 300;
+        line-height: 0.95;
+        letter-spacing: -0.02em;
+        color: var(--cream);
+        overflow: hidden;
+      }
+      .hero-name-line {
+        display: block;
+        overflow: hidden;
+      }
+      .hero-name-inner {
+        display: block;
+        transform: translateY(100%);
+      }
+      .hero-name em {
+        font-style: italic;
+        color: var(--sage);
+      }
+      .hero-title {
+        margin-top: 2rem;
+        font-size: 0.75rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--glow);
+        opacity: 0;
+      }
+      .hero-desc {
+        margin-top: 1.8rem;
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.35rem;
+        font-weight: 300;
+        line-height: 1.55;
+        color: rgba(254, 250, 224, 0.7);
+        max-width: 540px;
+        opacity: 0;
+      }
+      .hero-cta {
+        margin-top: 2rem;
+        display: flex;
+        gap: 1.4rem;
+        opacity: 0;
+        flex-wrap: wrap;
+      }
+      .btn-primary,
+      .btn-ghost {
+        display: inline-block;
+        padding: 0.9rem 2.4rem;
+        background: var(--firefly);
+        color: var(--ink);
+        font-family: "DM Mono", monospace;
+        font-size: 0.7rem;
+        font-weight: 500;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        text-decoration: none;
+        border-radius: 2px;
+        transition:
+          transform 0.25s,
+          box-shadow 0.25s;
+      }
+      .btn-ghost {
+        background: transparent;
+        border: 1px solid rgba(183, 228, 199, 0.35);
+        color: var(--glow);
+      }
+      .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 16px 40px rgba(212, 255, 125, 0.35);
+      }
+      .btn-ghost:hover {
+        border-color: var(--firefly);
+        color: var(--firefly);
+        transform: translateY(-3px);
+      }
+      .hero-scroll {
+        position: absolute;
+        bottom: 3rem;
+        left: 10vw;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        opacity: 0;
+      }
+      .scroll-line {
+        width: 60px;
+        height: 1px;
+        background: linear-gradient(to right, transparent, var(--sage));
+        transform-origin: left;
+      }
+      .scroll-label {
+        font-size: 0.6rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--sage);
+      }
+      #h-scroll-outer {
+        position: relative;
+      }
+      #h-scroll-inner {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        background: var(--moss);
+      }
+      .h-scroll-label {
+        position: absolute;
+        top: 3.5rem;
+        left: 10vw;
+        font-size: 0.62rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: var(--firefly);
+        opacity: 0.8;
+        z-index: 5;
+      }
+      .h-scroll-track {
+        display: flex;
+        gap: 2.5vw;
+        padding: 0 10vw;
+        will-change: transform;
+      }
+      .h-card {
+        flex-shrink: 0;
+        width: 380px;
+        background: rgba(8, 28, 21, 0.6);
+        border: 1px solid rgba(82, 183, 136, 0.15);
+        border-radius: 8px;
+        overflow: hidden;
+        transition: border-color 0.3s;
+      }
+      .h-card:hover {
+        border-color: rgba(212, 255, 125, 0.4);
+      }
+      .h-card img {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+        filter: brightness(0.75) saturate(1.2);
+        transition:
+          filter 0.5s,
+          transform 0.5s;
+      }
+      .h-card:hover img {
+        filter: brightness(0.9) saturate(1.3);
+        transform: scale(1.04);
+      }
+      .h-card-body {
+        padding: 2rem;
+      }
+      .h-card-tag {
+        font-size: 0.6rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--firefly);
+        margin-bottom: 0.6rem;
+      }
+      .h-card-title {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.4rem;
+        color: var(--cream);
+        line-height: 1.25;
+        margin-bottom: 0.8rem;
+      }
+      .h-card-desc {
+        font-size: 0.73rem;
+        color: rgba(254, 250, 224, 0.6);
+        line-height: 1.7;
+      }
+      .h-progress {
+        position: absolute;
+        bottom: 3.5rem;
+        left: 10vw;
+        display: flex;
+        align-items: center;
+        gap: 1.2rem;
+        z-index: 5;
+      }
+      .h-progress-bar {
+        width: 120px;
+        height: 2px;
+        background: rgba(82, 183, 136, 0.2);
+        border-radius: 2px;
+        overflow: hidden;
+      }
+      .h-progress-fill {
+        height: 100%;
+        background: var(--firefly);
+        width: 0%;
+        transition: width 0.1s linear;
+      }
+      .h-progress-label {
+        font-size: 0.62rem;
+        letter-spacing: 0.15em;
+        color: var(--sage);
+      }
+      section {
+        padding: 8rem 10vw;
+      }
+      .section-label {
+        font-size: 0.62rem;
+        letter-spacing: 0.32em;
+        text-transform: uppercase;
+        color: var(--firefly);
+        opacity: 0.85;
+        margin-bottom: 1rem;
+      }
+      .section-title {
+        font-family: "Cormorant Garamond", serif;
+        font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+        font-weight: 300;
+        line-height: 1.1;
+        color: var(--cream);
+        overflow: hidden;
+      }
+      .section-title em {
+        font-style: italic;
+        color: var(--sage);
+      }
+      .divider {
+        width: 0px;
+        height: 1px;
+        background: linear-gradient(to right, var(--sage), transparent);
+        margin: 2.2rem 0;
+      }
+      .stats-strip {
+        background: rgba(13, 40, 24, 0.9);
+        border-top: 1px solid rgba(82, 183, 136, 0.1);
+        border-bottom: 1px solid rgba(82, 183, 136, 0.1);
+        padding: 3.5rem 10vw;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        text-align: center;
+        gap: 0;
+      }
+      .stat-item + .stat-item {
+        border-left: 1px solid rgba(82, 183, 136, 0.1);
+      }
+      .stat-num {
+        font-family: "Syne", sans-serif;
+        font-size: 3.2rem;
+        font-weight: 800;
+        color: var(--firefly);
+        line-height: 1;
+        margin-bottom: 0.5rem;
+      }
+      .stat-lbl {
+        font-size: 0.62rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--sage);
+        opacity: 0.75;
+      }
+      #about {
+        background: var(--forest);
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6rem;
+        align-items: center;
+      }
+      .about-img-wrap {
+        position: relative;
+      }
+      .about-img {
+        width: 100%;
+        aspect-ratio: 4/5;
+        object-fit: cover;
+        border-radius: 4px;
+        filter: saturate(1.1);
+        display: block;
+      }
+      .about-img-frame {
+        position: absolute;
+        inset: -14px -14px 14px 14px;
+        border: 1px solid rgba(82, 183, 136, 0.22);
+        border-radius: 4px;
+        pointer-events: none;
+        transform: scale(0);
+        transform-origin: top left;
+      }
+      .about-badge {
+        position: absolute;
+        bottom: -20px;
+        right: -20px;
+        background: var(--firefly);
+        color: var(--ink);
+        padding: 1.3rem 1.6rem;
+        border-radius: 4px;
+        text-align: center;
+        transform: scale(0) rotate(6deg);
+      }
+      .badge-num {
+        font-family: "Syne", sans-serif;
+        font-size: 2.2rem;
+        font-weight: 800;
+        display: block;
+        line-height: 1;
+      }
+      .badge-lbl {
+        font-size: 0.58rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        font-weight: 500;
+      }
+      .about-text {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.18rem;
+        line-height: 1.9;
+        color: rgba(254, 250, 224, 0.8);
+        margin-bottom: 1.5rem;
+        transform: translateY(30px);
+        opacity: 0;
+      }
+      .interest-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.7rem;
+        margin-top: 1.8rem;
+      }
+      .tag {
+        font-size: 0.62rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--sage);
+        border: 1px solid rgba(82, 183, 136, 0.25);
+        padding: 0.4rem 1rem;
+        border-radius: 2px;
+        background: rgba(82, 183, 136, 0.04);
+        transition:
+          background 0.25s,
+          color 0.25s,
+          transform 0.25s,
+          border-color 0.25s;
+        transform: translateY(20px);
+        opacity: 0;
+      }
+      .tag:hover {
+        background: rgba(82, 183, 136, 0.15);
+        color: var(--firefly);
+        transform: translateY(-2px) !important;
+        border-color: rgba(212, 255, 125, 0.4);
+      }
+      #experience {
+        background: var(--ink);
+      }
+      .exp-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin-top: 4rem;
+      }
+      .exp-card {
+        background: rgba(26, 74, 46, 0.2);
+        border: 1px solid rgba(82, 183, 136, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+        transform: translateY(60px);
+        opacity: 0;
+        transition: border-color 0.3s;
+      }
+      .exp-card:hover {
+        border-color: rgba(82, 183, 136, 0.35);
+      }
+      .exp-card-img {
+        width: 100%;
+        height: 210px;
+        object-fit: cover;
+        filter: saturate(1.1) brightness(0.8);
+        transition:
+          filter 0.5s,
+          transform 0.5s;
+        display: block;
+      }
+      .exp-card:hover .exp-card-img {
+        filter: saturate(1.2) brightness(0.95);
+        transform: scale(1.04);
+      }
+      .exp-card-body {
+        padding: 2rem;
+      }
+      .exp-card-role {
+        font-family: "Syne", sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--cream);
+        margin-bottom: 0.4rem;
+      }
+      .exp-card-org {
+        font-size: 0.67rem;
+        letter-spacing: 0.12em;
+        color: var(--sage);
+        text-transform: uppercase;
+        margin-bottom: 0.3rem;
+      }
+      .exp-card-date {
+        font-size: 0.62rem;
+        color: var(--firefly);
+        opacity: 0.7;
+        margin-bottom: 1.3rem;
+      }
+      .exp-card-list {
+        list-style: none;
+      }
+      .exp-card-list li {
+        font-size: 0.76rem;
+        color: rgba(254, 250, 224, 0.65);
+        line-height: 1.75;
+        padding-left: 1.1rem;
+        position: relative;
+      }
+      .exp-card-list li::before {
+        content: "▸";
+        position: absolute;
+        left: 0;
+        color: var(--sage);
+        font-size: 0.6rem;
+        top: 0.15em;
+      }
+      .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+        margin-top: 4rem;
+      }
+      .project-card {
+        position: relative;
+        border-radius: 6px;
+        overflow: hidden;
+        aspect-ratio: 16/10;
+        cursor: default;
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      .project-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: brightness(0.5) saturate(1.2);
+        transition:
+          transform 0.7s,
+          filter 0.7s;
+      }
+      .project-card:hover img {
+        transform: scale(1.08);
+        filter: brightness(0.4) saturate(1.3);
+      }
+      .project-card-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to top,
+          rgba(8, 28, 21, 0.95) 0%,
+          transparent 60%
+        );
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 2rem;
+      }
+      .project-card-tag {
+        font-size: 0.58rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--firefly);
+        margin-bottom: 0.5rem;
+      }
+      .project-card-title {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.5rem;
+        font-weight: 400;
+        color: var(--cream);
+        line-height: 1.2;
+      }
+      .project-card-desc {
+        font-size: 0.72rem;
+        color: rgba(254, 250, 224, 0.7);
+        line-height: 1.65;
+        margin-top: 0.6rem;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .project-card:hover .project-card-desc {
+        max-height: 120px;
+      }
+      #publications {
+        background: var(--ink);
+      }
+      .pub-list {
+        margin-top: 4rem;
+        display: flex;
+        flex-direction: column;
+      }
+      .pub-item {
+        display: grid;
+        grid-template-columns: 80px 1fr;
+        gap: 2.5rem;
+        align-items: start;
+        padding: 2.2rem 0;
+        border-bottom: 1px solid rgba(82, 183, 136, 0.08);
+        opacity: 0;
+        transform: translateX(-40px);
+      }
+      .pub-num {
+        font-family: "Syne", sans-serif;
+        font-size: 3.2rem;
+        font-weight: 800;
+        color: rgba(82, 183, 136, 0.12);
+        line-height: 1;
+        transition: color 0.4s;
+      }
+      .pub-item:hover .pub-num {
+        color: rgba(212, 255, 125, 0.25);
+      }
+      .pub-title {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.22rem;
+        color: var(--cream);
+        line-height: 1.4;
+        margin-bottom: 0.55rem;
+      }
+      .pub-authors {
+        font-size: 0.7rem;
+        color: var(--sage);
+        letter-spacing: 0.05em;
+        margin-bottom: 0.3rem;
+      }
+      .pub-journal {
+        font-size: 0.63rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: rgba(254, 250, 224, 0.35);
+      }
+      #conferences {
+        background: var(--forest);
+      }
+      .conf-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+        margin-top: 4rem;
+      }
+      .conf-card {
+        background: rgba(8, 28, 21, 0.5);
+        border: 1px solid rgba(82, 183, 136, 0.12);
+        border-radius: 8px;
+        overflow: hidden;
+        transform: translateY(50px) scale(0.97);
+        opacity: 0;
+        transition:
+          transform 0.3s,
+          border-color 0.3s;
+      }
+      .conf-card:hover {
+        transform: translateY(-5px) scale(1) !important;
+        border-color: rgba(212, 255, 125, 0.35);
+      }
+      .conf-card img {
+        width: 100%;
+        height: 170px;
+        object-fit: cover;
+        filter: brightness(0.55) saturate(1.2);
+        transition: filter 0.4s;
+      }
+      .conf-card:hover img {
+        filter: brightness(0.7) saturate(1.3);
+      }
+      .conf-card-body {
+        padding: 1.6rem;
+      }
+      .conf-icon {
+        font-size: 1.6rem;
+        margin-bottom: 0.8rem;
+      }
+      .conf-title {
+        font-family: "Syne", sans-serif;
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--cream);
+        line-height: 1.3;
+        margin-bottom: 0.55rem;
+      }
+      .conf-desc {
+        font-size: 0.72rem;
+        color: rgba(254, 250, 224, 0.6);
+        line-height: 1.65;
+      }
+      .conf-badge {
+        display: inline-block;
+        margin-top: 0.9rem;
+        font-size: 0.58rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--firefly);
+        border: 1px solid rgba(212, 255, 125, 0.22);
+        padding: 0.3rem 0.75rem;
+        border-radius: 2px;
+      }
+      #skills {
+        background: var(--ink);
+      }
+      .skills-inner {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6rem;
+        align-items: center;
+        margin-top: 4rem;
+      }
+      .skill-row {
+        margin-bottom: 2rem;
+      }
+      .skill-label {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.67rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--glow);
+        margin-bottom: 0.65rem;
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      .skill-bar {
+        height: 2px;
+        background: rgba(82, 183, 136, 0.1);
+        border-radius: 2px;
+        overflow: hidden;
+      }
+      .skill-fill {
+        height: 100%;
+        background: linear-gradient(
+          to right,
+          var(--fern),
+          var(--sage),
+          var(--firefly)
+        );
+        border-radius: 2px;
+        width: 0%;
+        box-shadow: 0 0 8px rgba(212, 255, 125, 0.2);
+      }
+      .skills-visual {
+        position: relative;
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      .skills-img {
+        width: 100%;
+        aspect-ratio: 1;
+        object-fit: cover;
+        border-radius: 50%;
+        filter: saturate(1.3) brightness(0.8);
+        border: 2px solid rgba(82, 183, 136, 0.2);
+        display: block;
+      }
+      .skills-glow {
+        position: absolute;
+        inset: -30px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(82, 183, 136, 0.1) 0%,
+          transparent 70%
+        );
+        animation: skillGlow 3s infinite;
+      }
+      .skills-orbit {
+        position: absolute;
+        inset: -20px;
+        border-radius: 50%;
+        border: 1px dashed rgba(82, 183, 136, 0.15);
+        animation: orbit 20s linear infinite;
+      }
+      .skills-orbit-dot {
+        position: absolute;
+        top: -4px;
+        left: 50%;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--firefly);
+        transform: translateX(-50%);
+        box-shadow: 0 0 10px rgba(212, 255, 125, 0.6);
+      }
+      @keyframes skillGlow {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 0.8;
+        }
+        50% {
+          transform: scale(1.05);
+          opacity: 1;
+        }
+      }
+      @keyframes orbit {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      #contact {
+        background: var(--forest);
+        position: relative;
+        overflow: hidden;
+      }
+      #contact::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: url("https://images.unsplash.com/photo-1448375240586-882707db888b?w=1600&q=80");
+        background-size: cover;
+        background-position: center;
+        filter: brightness(0.12) saturate(1.3);
+      }
+      .contact-inner {
+        position: relative;
+        z-index: 2;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6rem;
+        align-items: center;
+      }
+      .contact-item {
+        display: flex;
+        align-items: center;
+        gap: 1.4rem;
+        margin-bottom: 1.8rem;
+        opacity: 0;
+        transform: translateX(30px);
+      }
+      .contact-icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        background: rgba(82, 183, 136, 0.08);
+        border: 1px solid rgba(82, 183, 136, 0.18);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        flex-shrink: 0;
+        transition:
+          background 0.3s,
+          border-color 0.3s;
+      }
+      .contact-item:hover .contact-icon {
+        background: rgba(212, 255, 125, 0.15);
+        border-color: rgba(212, 255, 125, 0.4);
+      }
+      .contact-lbl {
+        font-size: 0.6rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--sage);
+        margin-bottom: 0.2rem;
+      }
+      .contact-val {
+        font-size: 0.85rem;
+        color: var(--cream);
+      }
+      .contact-val a {
+        color: var(--cream);
+        text-decoration: none;
+        transition: color 0.25s;
+      }
+      .contact-val a:hover {
+        color: var(--firefly);
+      }
+      footer {
+        background: var(--ink);
+        padding: 3rem 10vw;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-top: 1px solid rgba(82, 183, 136, 0.07);
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+      .footer-copy {
+        font-size: 0.65rem;
+        letter-spacing: 0.1em;
+        color: rgba(254, 250, 224, 0.3);
+      }
+      .footer-firefly {
+        font-size: 0.65rem;
+        letter-spacing: 0.1em;
+        color: var(--firefly);
+        opacity: 0.55;
+      }
+      .marquee-strip {
+        background: var(--firefly);
+        padding: 0.9rem 0;
+        overflow: hidden;
+        display: flex;
+      }
+      .marquee-track {
+        display: flex;
+        gap: 0;
+        animation: marquee 18s linear infinite;
+        white-space: nowrap;
+      }
+      .marquee-track span {
+        color: var(--ink);
+        font-size: 0.65rem;
+        font-weight: 500;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        padding: 0 2.5rem;
+      }
+      .marquee-track span.dot {
+        color: rgba(8, 28, 21, 0.4);
+        font-size: 0.8rem;
+        padding: 0;
+      }
+      @keyframes marquee {
+        from {
+          transform: translateX(0);
+        }
+        to {
+          transform: translateX(-50%);
+        }
+      }
+      .scroll-progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 2px;
+        background: var(--firefly);
+        width: 0%;
+        z-index: 200;
+        box-shadow: 0 0 8px rgba(212, 255, 125, 0.5);
+        pointer-events: none;
+      }
+      @media (max-width: 1000px) {
+        section {
+          padding: 6rem 6vw;
+        }
+        #about,
+        .skills-inner,
+        .contact-inner {
+          grid-template-columns: 1fr;
+          gap: 3.5rem;
+        }
+        .about-img-wrap {
+          order: -1;
+        }
+        .exp-grid,
+        .projects-grid,
+        .conf-grid {
+          grid-template-columns: 1fr;
+        }
+        .stats-strip {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 2.5rem;
+        }
+        .stat-item + .stat-item {
+          border-left: none;
+        }
+        .h-card {
+          width: 320px;
+        }
+      }
+      @media (max-width: 600px) {
+        .stats-strip {
+          grid-template-columns: 1fr;
+        }
+        .stat-item + .stat-item {
+          border-left: none;
+          border-top: 1px solid rgba(82, 183, 136, 0.1);
+        }
+        .hero-cta {
+          flex-direction: column;
+          align-items: flex-start;
+          margin-top: 1rem;
+        }
+        .btn-primary,
+        .btn-ghost {
+          text-align: center;
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="loader">
+      <div class="loader-firefly">🪲</div>
+      <div class="loader-text">Ashutosh Dey</div>
+      <div class="loader-bar-wrap">
+        <div class="loader-bar" id="loaderBar"></div>
+      </div>
+      <div class="loader-percent" id="loaderPercent">0%</div>
+    </div>
+    <div class="scroll-progress" id="scrollProgress"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
 
-<section id="hero"><div class="hero-bg" id="heroBg"></div><div class="hero-overlay"></div><div class="hero-noise"></div><div class="firefly-particles" id="particles"></div>
-  <div class="hero-content"><span class="hero-tag" id="heroTag">🪲 Wildlife Researcher &amp; Conservation Biologist</span>
-    <h1 class="hero-name"><span class="hero-name-line"><span class="hero-name-inner" id="heroLine1">Ashutosh</span></span><span class="hero-name-line"><span class="hero-name-inner" id="heroLine2"><em>Dey</em></span></span></h1>
-    <p class="hero-title" id="heroTitle">Project Biologist · Firefly Ecology · Biodiversity Conservation</p>
-    <p class="hero-desc" id="heroDesc">Bridging the gap between ecological science and community action — studying fireflies, documenting biodiversity, and working at the frontier of human-wildlife harmony.</p>
-    <div class="hero-cta" id="heroCta"><a href="#projects" class="btn-primary" id="exploreResearchBtn">Explore Research</a><a href="#contact" class="btn-ghost">Get in Touch</a></div>
-  </div>
-  <div class="hero-scroll" id="heroScroll"><div class="scroll-line"></div><span class="scroll-label">Scroll to explore</span></div>
-</section>
+    <nav id="navbar">
+      <a class="nav-logo" href="#hero">A·DEY</a>
+      <div class="menu-icon" id="menuIcon">
+        <span></span><span></span><span></span>
+      </div>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#about">About</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#projects">Research</a></li>
+        <li><a href="#publications">Publications</a></li>
+        <li><a href="#conferences">Events</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
 
-<div class="stats-strip" id="statsStrip"><div class="stat-item"><div class="stat-num" data-count="5">0</div><div class="stat-lbl">Publications</div></div><div class="stat-item"><div class="stat-num" data-count="3">0</div><div class="stat-lbl">Int'l Events Organized</div></div><div class="stat-item"><div class="stat-num" data-count="4">0</div><div class="stat-lbl">Research Projects</div></div><div class="stat-item"><div class="stat-num" data-count="2">0</div><div class="stat-lbl">Years Field Research</div></div></div>
-<div class="marquee-strip"><div class="marquee-track"><span>Firefly Ecology</span><span class="dot">✦</span><span>Wildlife Conservation</span><span class="dot">✦</span><span>Biodiversity Research</span><span class="dot">✦</span><span>Nocturnal Surveys</span><span class="dot">✦</span><span>Human-Wildlife Conflict</span><span class="dot">✦</span><span>Community Science</span><span class="dot">✦</span><span>IUCN SSC</span><span class="dot">✦</span><span>Odisha · Karnataka · Kerala</span><span class="dot">✦</span><span>Firefly Ecology</span><span class="dot">✦</span><span>Wildlife Conservation</span><span class="dot">✦</span><span>Biodiversity Research</span><span class="dot">✦</span><span>Nocturnal Surveys</span><span class="dot">✦</span><span>Human-Wildlife Conflict</span><span class="dot">✦</span><span>Community Science</span><span class="dot">✦</span><span>IUCN SSC</span><span class="dot">✦</span><span>Odisha · Karnataka · Kerala</span><span class="dot">✦</span></div></div>
+    <section id="hero">
+      <div class="hero-bg" id="heroBg"></div>
+      <div class="hero-overlay"></div>
+      <div class="hero-noise"></div>
+      <div class="firefly-particles" id="particles"></div>
+      <div class="hero-content">
+        <span class="hero-tag" id="heroTag"
+          >🪲 Wildlife Researcher &amp; Conservation Biologist</span
+        >
+        <h1 class="hero-name">
+          <span class="hero-name-line"
+            ><span class="hero-name-inner" id="heroLine1">Ashutosh</span></span
+          ><span class="hero-name-line"
+            ><span class="hero-name-inner" id="heroLine2"
+              ><em>Dey</em></span
+            ></span
+          >
+        </h1>
+        <p class="hero-title" id="heroTitle">
+          Project Biologist · Firefly Ecology · Biodiversity Conservation
+        </p>
+        <p class="hero-desc" id="heroDesc">
+          Bridging the gap between ecological science and community action —
+          studying fireflies, documenting biodiversity, and working at the
+          frontier of human-wildlife harmony.
+        </p>
+        <div class="hero-cta" id="heroCta">
+          <a href="#projects" class="btn-primary" id="exploreResearchBtn"
+            >Explore Research</a
+          ><a href="#contact" class="btn-ghost">Get in Touch</a>
+        </div>
+      </div>
+      <div class="hero-scroll" id="heroScroll">
+        <div class="scroll-line"></div>
+        <span class="scroll-label">Scroll to explore</span>
+      </div>
+    </section>
 
-<section id="about"><div class="about-img-wrap"><img class="about-img" src="https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=800&q=80" alt="Wildlife field research" /><div class="about-img-frame" id="aboutFrame"></div><div class="about-badge" id="aboutBadge"><span class="badge-num">M.Sc.</span><span class="badge-lbl">Wildlife Biodiversity<br>&amp; Conservation</span></div></div><div id="aboutRight"><p class="section-label">About Me</p><h2 class="section-title">A Naturalist <em>at heart,</em><br>a Scientist by training</h2><div class="divider"></div><p class="about-text">I completed my M.Sc. in Wildlife Biodiversity &amp; Conservation from North Orissa University, Odisha. Over the years I have actively worked on biodiversity assessment, ecological surveys, firefly research, and conservation-based field projects across India's remarkable forest landscapes.</p><p class="about-text">Currently working as a Project Biologist in a Human-Wildlife Conflict CSR Project, contributing to ecological monitoring, field surveys, conservation awareness, and wildlife research — combining rigorous science with community participation for long-term biodiversity conservation.</p><div class="interest-tags" id="tagsWrap"><span class="tag">Firefly Ecology</span><span class="tag">Human-Wildlife Conflict</span><span class="tag">Biodiversity Monitoring</span><span class="tag">Nocturnal Surveys</span><span class="tag">GIS Mapping</span><span class="tag">Community Conservation</span><span class="tag">Ecological Documentation</span></div></div></section>
+    <div class="stats-strip" id="statsStrip">
+      <div class="stat-item">
+        <div class="stat-num" data-count="5">0</div>
+        <div class="stat-lbl">Publications</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num" data-count="3">0</div>
+        <div class="stat-lbl">Int'l Events Organized</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num" data-count="4">0</div>
+        <div class="stat-lbl">Research Projects</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num" data-count="2">0</div>
+        <div class="stat-lbl">Years Field Research</div>
+      </div>
+    </div>
+    <div class="marquee-strip">
+      <div class="marquee-track">
+        <span>Firefly Ecology</span><span class="dot">✦</span
+        ><span>Wildlife Conservation</span><span class="dot">✦</span
+        ><span>Biodiversity Research</span><span class="dot">✦</span
+        ><span>Nocturnal Surveys</span><span class="dot">✦</span
+        ><span>Human-Wildlife Conflict</span><span class="dot">✦</span
+        ><span>Community Science</span><span class="dot">✦</span
+        ><span>IUCN SSC</span><span class="dot">✦</span
+        ><span>Odisha · Karnataka · Kerala</span><span class="dot">✦</span
+        ><span>Firefly Ecology</span><span class="dot">✦</span
+        ><span>Wildlife Conservation</span><span class="dot">✦</span
+        ><span>Biodiversity Research</span><span class="dot">✦</span
+        ><span>Nocturnal Surveys</span><span class="dot">✦</span
+        ><span>Human-Wildlife Conflict</span><span class="dot">✦</span
+        ><span>Community Science</span><span class="dot">✦</span
+        ><span>IUCN SSC</span><span class="dot">✦</span
+        ><span>Odisha · Karnataka · Kerala</span><span class="dot">✦</span>
+      </div>
+    </div>
 
-<section id="experience"><p class="section-label">Career</p><h2 class="section-title">Professional <em>Experience</em></h2><div class="divider"></div><div class="exp-grid"><div class="exp-card"><img class="exp-card-img" src="https://media.istockphoto.com/id/588614058/photo/elephants-in-the-forest.jpg?s=612x612&w=0&k=20&c=k03zhtm9WS5a3Jgn46X2UEzbG_cmuFJHrZflZg2y6O4=" alt="Wildlife field work" /><div class="exp-card-body"><div class="exp-card-org">CSR Conservation Project · Present</div><div class="exp-card-role">Project Biologist</div><div class="exp-card-date">Human-Wildlife Conflict Division</div><ul class="exp-card-list"><li>Human-wildlife conflict mitigation activities</li><li>Biodiversity monitoring and ecological surveys</li><li>Community awareness and conservation outreach</li><li>GPS-based field navigation and wildlife data collection</li><li>Coordination with local stakeholders and forest officials</li></ul></div></div><div class="exp-card"><img class="exp-card-img" src="img2.jpeg" alt="Firefly research Karnataka" /><div class="exp-card-body"><div class="exp-card-org">EMPRI, Bangalore · Nov 2022 – Mar 2024</div><div class="exp-card-role">Field Cum-Lab Assistant</div><div class="exp-card-date">Firefly Identification &amp; Bioecology, Karnataka</div><ul class="exp-card-list"><li>Nocturnal field surveys for firefly monitoring</li><li>Firefly behavioral observations and species documentation</li><li>Habitat assessment and biodiversity recording</li><li>Scientific documentation and research coordination</li></ul></div></div></div></section>
+    <section id="about">
+      <div class="about-img-wrap">
+        <img
+          class="about-img"
+          src="https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=800&q=80"
+          alt="Wildlife field research"
+        />
+        <div class="about-img-frame" id="aboutFrame"></div>
+        <div class="about-badge" id="aboutBadge">
+          <span class="badge-num">M.Sc.</span
+          ><span class="badge-lbl"
+            >Wildlife Biodiversity<br />&amp; Conservation</span
+          >
+        </div>
+      </div>
+      <div id="aboutRight">
+        <p class="section-label">About Me</p>
+        <h2 class="section-title">
+          A Naturalist <em>at heart,</em><br />a Scientist by training
+        </h2>
+        <div class="divider"></div>
+        <p class="about-text">
+          I completed my M.Sc. in Wildlife Biodiversity &amp; Conservation from
+          North Orissa University, Odisha. Over the years I have actively worked
+          on biodiversity assessment, ecological surveys, firefly research, and
+          conservation-based field projects across India's remarkable forest
+          landscapes.
+        </p>
+        <p class="about-text">
+          Currently working as a Project Biologist in a Human-Wildlife Conflict
+          CSR Project, contributing to ecological monitoring, field surveys,
+          conservation awareness, and wildlife research — combining rigorous
+          science with community participation for long-term biodiversity
+          conservation.
+        </p>
+        <div class="interest-tags" id="tagsWrap">
+          <span class="tag">Firefly Ecology</span
+          ><span class="tag">Human-Wildlife Conflict</span
+          ><span class="tag">Biodiversity Monitoring</span
+          ><span class="tag">Nocturnal Surveys</span
+          ><span class="tag">GIS Mapping</span
+          ><span class="tag">Community Conservation</span
+          ><span class="tag">Ecological Documentation</span>
+        </div>
+      </div>
+    </section>
 
-<div id="h-scroll-outer"><div id="h-scroll-inner"><span class="h-scroll-label">Field Work · Research Projects</span><div class="h-scroll-track" id="hScrollTrack"><div class="h-card"><img src="https://www.insightsonindia.com/wp-content/uploads/2026/03/Human-Wildlife-Conflict.png" alt="Elephant" /><div class="h-card-body"><div class="h-card-tag">Conflict Study · Odisha</div><div class="h-card-title">Human-Elephant Conflict Assessment</div><div class="h-card-desc">Case study in Rairangpur Forest Division focusing on conflict assessment, community interactions, and evidence-based mitigation approaches.</div></div></div><div class="h-card"><img src="img1.jpeg" alt="Butterfly" /><div class="h-card-body"><div class="h-card-tag">Entomology · Odisha</div><div class="h-card-title">Lepidoptera &amp; Odonata Biodiversity</div><div class="h-card-desc">Field-based assessment in Badampahar Forest Range documenting species diversity, ecological significance and conservation status.</div></div></div><div class="h-card"><img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=800&q=80" alt="PBR" /><div class="h-card-body"><div class="h-card-tag">Community Science · Baripada</div><div class="h-card-title">People's Biodiversity Register (PBR)</div><div class="h-card-desc">Biodiversity documentation initiative under Baripada Forest Division integrating traditional ecological knowledge with scientific surveys.</div></div></div><div class="h-card"><img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800&q=80" alt="Medicinal plants" /><div class="h-card-body"><div class="h-card-tag">Ethnobotany · Deuli Forest</div><div class="h-card-title">Medicinal Plant Documentation</div><div class="h-card-desc">Research on medicinal plant diversity in Deuli Forest Range, cataloguing ethnobotanical uses and conservation priorities.</div></div></div><div class="h-card"><img src="https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?w=800&q=80" alt="Firefly" /><div class="h-card-body"><div class="h-card-tag">Entomology · Karnataka</div><div class="h-card-title">Firefly Bioecology &amp; Distribution</div><div class="h-card-desc">Nocturnal field surveys and behavioral studies of firefly species across Karnataka forest habitats in collaboration with EMPRI Bangalore.</div></div></div></div><div class="h-progress"><div class="h-progress-bar"><div class="h-progress-fill" id="hProgressFill"></div></div><span class="h-progress-label" id="hProgressLabel">Drag to explore</span></div></div></div>
+    <section id="experience">
+      <p class="section-label">Career</p>
+      <h2 class="section-title">Professional <em>Experience</em></h2>
+      <div class="divider"></div>
+      <div class="exp-grid">
+        <div class="exp-card">
+          <img
+            class="exp-card-img"
+            src="https://media.istockphoto.com/id/588614058/photo/elephants-in-the-forest.jpg?s=612x612&w=0&k=20&c=k03zhtm9WS5a3Jgn46X2UEzbG_cmuFJHrZflZg2y6O4="
+            alt="Wildlife field work"
+          />
+          <div class="exp-card-body">
+            <div class="exp-card-org">CSR Conservation Project · Present</div>
+            <div class="exp-card-role">Project Biologist</div>
+            <div class="exp-card-date">Human-Wildlife Conflict Division</div>
+            <ul class="exp-card-list">
+              <li>Human-wildlife conflict mitigation activities</li>
+              <li>Biodiversity monitoring and ecological surveys</li>
+              <li>Community awareness and conservation outreach</li>
+              <li>GPS-based field navigation and wildlife data collection</li>
+              <li>Coordination with local stakeholders and forest officials</li>
+            </ul>
+          </div>
+        </div>
+        <div class="exp-card">
+          <img
+            class="exp-card-img"
+            src="img2.jpeg"
+            alt="Firefly research Karnataka"
+          />
+          <div class="exp-card-body">
+            <div class="exp-card-org">
+              EMPRI, Bangalore · Nov 2022 – Mar 2024
+            </div>
+            <div class="exp-card-role">Field Cum-Lab Assistant</div>
+            <div class="exp-card-date">
+              Firefly Identification &amp; Bioecology, Karnataka
+            </div>
+            <ul class="exp-card-list">
+              <li>Nocturnal field surveys for firefly monitoring</li>
+              <li>Firefly behavioral observations and species documentation</li>
+              <li>Habitat assessment and biodiversity recording</li>
+              <li>Scientific documentation and research coordination</li>
+              <li>Firefly rearing</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
 
-<section id="publications"><p class="section-label">Research Output</p><h2 class="section-title">Publications &amp; <em>Contributions</em></h2><div class="divider"></div><div class="pub-list"><div class="pub-item"><div class="pub-num">01</div><div><div class="pub-title">Companions of the 'fun-loving' fireflies in the wild: friends or foes?</div><div class="pub-authors">Chakravarthy A.K., Parvez, Ashutosh Dey &amp; Amlan Das (2023)</div><div class="pub-journal">Indian Entomologist</div></div></div><div class="pub-item"><div class="pub-num">02</div><div><div class="pub-title">Assessment and Status of Lepidoptera and Odonata of Rairangpur Forest Division, Odisha, India</div><div class="pub-authors">Parvez et al. (2023)</div><div class="pub-journal">Biodiversity Research Publication</div></div></div><div class="pub-item"><div class="pub-num">03</div><div><div class="pub-title">Sacred Groves of Badampahar Forest Range, Odisha</div><div class="pub-authors">Barik et al. (2023)</div><div class="pub-journal">Ecology &amp; Conservation Studies</div></div></div><div class="pub-item"><div class="pub-num">04</div><div><div class="pub-title">Ethnobotany in Deuli Forest Range, Odisha</div><div class="pub-authors">Khan et al. (2021)</div><div class="pub-journal">Journal of Ethnobotanical Research</div></div></div><div class="pub-item"><div class="pub-num">05</div><div><div class="pub-title">Aquatic Fauna of Suleipat Dam, Odisha</div><div class="pub-authors">Dey et al. (2021)</div><div class="pub-journal">Freshwater Biodiversity Documentation</div></div></div></div></section>
+    <div id="h-scroll-outer">
+      <div id="h-scroll-inner">
+        <span class="h-scroll-label">Field Work · Research Projects</span>
+        <div class="h-scroll-track" id="hScrollTrack">
+          <div class="h-card">
+            <img
+              src="https://www.insightsonindia.com/wp-content/uploads/2026/03/Human-Wildlife-Conflict.png"
+              alt="Elephant"
+            />
+            <div class="h-card-body">
+              <div class="h-card-tag">Conflict Study · Odisha</div>
+              <div class="h-card-title">Human-Elephant Conflict Assessment</div>
+              <div class="h-card-desc">
+                Case study in Rairangpur Forest Division focusing on conflict
+                assessment, community interactions, and evidence-based
+                mitigation approaches.
+              </div>
+            </div>
+          </div>
+          <div class="h-card">
+            <img src="img1.jpeg" alt="Butterfly" />
+            <div class="h-card-body">
+              <div class="h-card-tag">Entomology · Odisha</div>
+              <div class="h-card-title">
+                Lepidoptera &amp; Odonata Biodiversity
+              </div>
+              <div class="h-card-desc">
+                Field-based assessment in Badampahar Forest Range documenting
+                species diversity, ecological significance and conservation
+                status.
+              </div>
+            </div>
+          </div>
+          <div class="h-card">
+            <img
+              src="img3.jpeg"
+              alt="PBR"
+            />
+            <div class="h-card-body">
+              <div class="h-card-tag">Community Science · Baripada</div>
+              <div class="h-card-title">
+                People's Biodiversity Register (PBR)
+              </div>
+              <div class="h-card-desc">
+                Biodiversity documentation initiative under Baripada Forest
+                Division integrating traditional ecological knowledge with
+                scientific surveys.
+              </div>
+            </div>
+          </div>
+          <div class="h-card">
+            <img
+              src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800&q=80"
+              alt="Medicinal plants"
+            />
+            <div class="h-card-body">
+              <div class="h-card-tag">Ethnobotany · Deuli Forest</div>
+              <div class="h-card-title">Medicinal Plant Documentation</div>
+              <div class="h-card-desc">
+                Research on medicinal plant diversity in Deuli Forest Range,
+                cataloguing ethnobotanical uses and conservation priorities.
+              </div>
+            </div>
+          </div>
+          <div class="h-card">
+            <img
+              src="https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?w=800&q=80"
+              alt="Firefly"
+            />
+            <div class="h-card-body">
+              <div class="h-card-tag">Entomology · Karnataka</div>
+              <div class="h-card-title">
+                Firefly Bioecology &amp; Distribution
+              </div>
+              <div class="h-card-desc">
+                Nocturnal field surveys and behavioral studies of firefly
+                species across Karnataka forest habitats in collaboration with
+                EMPRI Bangalore.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="h-progress">
+          <div class="h-progress-bar">
+            <div class="h-progress-fill" id="hProgressFill"></div>
+          </div>
+          <span class="h-progress-label" id="hProgressLabel"
+            >Drag to explore</span
+          >
+        </div>
+      </div>
+    </div>
 
-<section id="conferences"><p class="section-label">Events &amp; Leadership</p><h2 class="section-title">Conferences &amp; <em>Workshops</em></h2><div class="divider"></div><div class="conf-grid"><div class="conf-card"><img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80" alt="International Firefly Conclave" /><div class="conf-card-body"><div class="conf-icon">🌍</div><div class="conf-title">International Firefly Conclave</div><div class="conf-desc">Organized a landmark international conclave at Kannur University, Kerala, bringing together global firefly researchers, ecologists, and conservationists.</div><span class="conf-badge">Organizer · Kannur University, Kerala</span></div></div><div class="conf-card"><img src="https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?w=800&q=80" alt="IFTW 2024" /><div class="conf-card-body"><div class="conf-icon">🔬</div><div class="conf-title">IFTW 2024 — International Firefly Taxonomy Workshop</div><div class="conf-desc">Organized a hybrid international workshop in association with IUCN SSC, Monash University, and the Firefly Asian Association.</div><span class="conf-badge">Organizer · IUCN SSC Collaboration · 2024</span></div></div><div class="conf-card"><img src="https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=800&q=80" alt="World Firefly Day Webinar" /><div class="conf-card-body"><div class="conf-icon">💡</div><div class="conf-title">World Firefly Day Webinar 2023</div><div class="conf-desc">Coordinated an international webinar focused on firefly monitoring, conservation strategies, and community-based ecotourism opportunities.</div><span class="conf-badge">Coordinator · International Webinar · 2023</span></div></div></div></section>
+    <section id="publications">
+      <p class="section-label">Research Output</p>
+      <h2 class="section-title">Publications &amp; <em>Contributions</em></h2>
+      <div class="divider"></div>
+      <div class="pub-list">
+        <div class="pub-item">
+          <div class="pub-num">01</div>
+          <div>
+            <div class="pub-title">
+              Companions of the 'fun-loving' fireflies in the wild: friends or
+              foes?
+            </div>
+            <div class="pub-authors">
+              Chakravarthy A.K., Parvez, Ashutosh Dey &amp; Amlan Das (2023)
+            </div>
+            <div class="pub-journal">Indian Entomologist</div>
+          </div>
+        </div>
+        <div class="pub-item">
+          <div class="pub-num">02</div>
+          <div>
+            <div class="pub-title">
+              Assessment and Status of Lepidoptera and Odonata of Rairangpur
+              Forest Division, Odisha, India
+            </div>
+            <div class="pub-authors">Parvez et al. (2023)</div>
+            <div class="pub-journal">Biodiversity Research Publication</div>
+          </div>
+        </div>
+        <div class="pub-item">
+          <div class="pub-num">03</div>
+          <div>
+            <div class="pub-title">
+              Sacred Groves of Badampahar Forest Range, Odisha
+            </div>
+            <div class="pub-authors">Barik et al. (2023)</div>
+            <div class="pub-journal">Ecology &amp; Conservation Studies</div>
+          </div>
+        </div>
+        <div class="pub-item">
+          <div class="pub-num">04</div>
+          <div>
+            <div class="pub-title">
+              Ethnobotany in Deuli Forest Range, Odisha
+            </div>
+            <div class="pub-authors">Khan et al. (2021)</div>
+            <div class="pub-journal">Journal of Ethnobotanical Research</div>
+          </div>
+        </div>
+        <div class="pub-item">
+          <div class="pub-num">05</div>
+          <div>
+            <div class="pub-title">Aquatic Fauna of Suleipat Dam, Odisha</div>
+            <div class="pub-authors">Dey et al. (2021)</div>
+            <div class="pub-journal">Freshwater Biodiversity Documentation</div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-<section id="skills"><p class="section-label">Expertise</p><h2 class="section-title">Technical <em>Skills</em></h2><div class="divider"></div><div class="skills-inner"><div id="skillBars"><div class="skill-row"><div class="skill-label"><span>Wildlife Field Survey Techniques</span><span>Expert</span></div><div class="skill-bar"><div class="skill-fill" data-width="92"></div></div></div><div class="skill-row"><div class="skill-label"><span>Nocturnal Biodiversity Surveys</span><span>Expert</span></div><div class="skill-bar"><div class="skill-fill" data-width="90"></div></div></div><div class="skill-row"><div class="skill-label"><span>GPS Handling &amp; Field Navigation</span><span>Advanced</span></div><div class="skill-bar"><div class="skill-fill" data-width="88"></div></div></div><div class="skill-row"><div class="skill-label"><span>Ecological Monitoring &amp; Documentation</span><span>Advanced</span></div><div class="skill-bar"><div class="skill-fill" data-width="85"></div></div></div><div class="skill-row"><div class="skill-label"><span>Scientific Reporting</span><span>Advanced</span></div><div class="skill-bar"><div class="skill-fill" data-width="82"></div></div></div><div class="skill-row"><div class="skill-label"><span>QGIS &amp; Ecological Mapping</span><span>Intermediate</span></div><div class="skill-bar"><div class="skill-fill" data-width="60"></div></div></div><div class="skill-row"><div class="skill-label"><span>Adobe Photoshop</span><span>Intermediate</span></div><div class="skill-bar"><div class="skill-fill" data-width="58"></div></div></div></div><div class="skills-visual" id="skillsVisual"><div class="skills-glow"></div><div class="skills-orbit"><div class="skills-orbit-dot"></div></div><img class="skills-img" src="https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?w=800&q=80" alt="Firefly forest ecology" /></div></div></section>
+    <section id="conferences">
+      <p class="section-label">Events &amp; Leadership</p>
+      <h2 class="section-title">Conferences &amp; <em>Workshops</em></h2>
+      <div class="divider"></div>
+      <div class="conf-grid">
+        <div class="conf-card">
+          <img
+            src="Events2.jpeg"
+            alt="International Firefly Conclave"
+          />
+          <div class="conf-card-body">
+            <div class="conf-icon">🌍</div>
+            <div class="conf-title">International Firefly Conclave</div>
+            <div class="conf-desc">
+              Organized a landmark international conclave at Kannur University,
+              Kerala, bringing together global firefly researchers, ecologists,
+              and conservationists.
+            </div>
+            <span class="conf-badge"
+              >Organizer · Kannur University, Kerala</span
+            >
+          </div>
+        </div>
+        <div class="conf-card">
+          <img
+            src="Events3.jpeg"
+            alt="IFTW 2024"
+          />
+          <div class="conf-card-body">
+            <div class="conf-icon">🔬</div>
+            <div class="conf-title">
+              IFTW 2024 — International Firefly Taxonomy Workshop
+            </div>
+            <div class="conf-desc">
+              Organized a hybrid international workshop in association with IUCN
+              SSC, Monash University, and the Firefly Asian Association.
+            </div>
+            <span class="conf-badge"
+              >Organizer · IUCN SSC Collaboration · 2024</span
+            >
+          </div>
+        </div>
+        <div class="conf-card">
+          <img
+            src="Events1.jpeg"
+            alt="World Firefly Day Webinar"
+          />
+          <div class="conf-card-body">
+            <div class="conf-icon">💡</div>
+            <div class="conf-title">World Firefly Day Webinar 2023</div>
+            <div class="conf-desc">
+              Coordinated an international webinar focused on firefly
+              monitoring, conservation strategies, and community-based
+              ecotourism opportunities.
+            </div>
+            <span class="conf-badge"
+              >Coordinator · International Webinar · 2023</span
+            >
+          </div>
+        </div>
+      </div>
+    </section>
 
-<section id="contact"><div class="contact-inner"><div><p class="section-label" style="color:var(--firefly)">Get in Touch</p><h2 class="section-title">Let's <em>Connect</em></h2><div class="divider"></div><p style="font-size:.8rem;line-height:1.85;color:rgba(254,250,224,.7);opacity:1" id="contactDesc">Open to research collaborations, fieldwork opportunities, conservation projects, and speaking engagements related to firefly ecology and biodiversity conservation.</p></div><div><div class="contact-item"><div class="contact-icon">📍</div><div><div class="contact-lbl">Location</div><div class="contact-val">Balasore, Odisha, India</div></div></div><div class="contact-item"><div class="contact-icon">📧</div><div><div class="contact-lbl">Email</div><div class="contact-val"><a href="mailto:ashutoshday90@gmail.com">ashutoshday90@gmail.com</a></div></div></div><div class="contact-item"><div class="contact-icon">📞</div><div><div class="contact-lbl">Phone</div><div class="contact-val"><a href="tel:+916372970772">+91 6372970772</a></div></div></div><div class="contact-item"><div class="contact-icon">🔗</div><div><div class="contact-lbl">LinkedIn</div><div class="contact-val"><a href="https://www.linkedin.com/in/ashutosh-dey-1b4a0b1ab" target="_blank">ashutosh-dey-1b4a0b1ab</a></div></div></div></div></div></section>
+    <section id="skills">
+      <p class="section-label">Expertise</p>
+      <h2 class="section-title">Technical <em>Skills</em></h2>
+      <div class="divider"></div>
+      <div class="skills-inner">
+        <div id="skillBars">
+          <div class="skill-row">
+            <div class="skill-label">
+              <span>Wildlife Field Survey Techniques</span><span>Expert</span>
+            </div>
+            <div class="skill-bar">
+              <div class="skill-fill" data-width="92"></div>
+            </div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-label">
+              <span>Nocturnal Biodiversity Surveys</span><span>Expert</span>
+            </div>
+            <div class="skill-bar">
+              <div class="skill-fill" data-width="90"></div>
+            </div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-label">
+              <span>GPS Handling &amp; Field Navigation</span
+              ><span>Advanced</span>
+            </div>
+            <div class="skill-bar">
+              <div class="skill-fill" data-width="88"></div>
+            </div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-label">
+              <span>Ecological Monitoring &amp; Documentation</span
+              ><span>Advanced</span>
+            </div>
+            <div class="skill-bar">
+              <div class="skill-fill" data-width="85"></div>
+            </div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-label">
+              <span>Scientific Reporting</span><span>Advanced</span>
+            </div>
+            <div class="skill-bar">
+              <div class="skill-fill" data-width="82"></div>
+            </div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-label">
+              <span>QGIS &amp; Ecological Mapping</span
+              ><span>Intermediate</span>
+            </div>
+            <div class="skill-bar">
+              <div class="skill-fill" data-width="60"></div>
+            </div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-label">
+              <span>Adobe Photoshop</span><span>Intermediate</span>
+            </div>
+            <div class="skill-bar">
+              <div class="skill-fill" data-width="58"></div>
+            </div>
+          </div>
+        </div>
+        <div class="skills-visual" id="skillsVisual">
+          <div class="skills-glow"></div>
+          <div class="skills-orbit"><div class="skills-orbit-dot"></div></div>
+          <img
+            class="skills-img"
+            src="https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?w=800&q=80"
+            alt="Firefly forest ecology"
+          />
+        </div>
+      </div>
+    </section>
 
-<footer><span class="footer-copy">© 2025 Ashutosh Dey · Wildlife Researcher</span><span class="footer-firefly">🪲 Illuminating biodiversity, one firefly at a time</span></footer>
+    <section id="contact">
+      <div class="contact-inner">
+        <div>
+          <p class="section-label" style="color: var(--firefly)">
+            Get in Touch
+          </p>
+          <h2 class="section-title">Let's <em>Connect</em></h2>
+          <div class="divider"></div>
+          <p
+            style="
+              font-size: 0.8rem;
+              line-height: 1.85;
+              color: rgba(254, 250, 224, 0.7);
+              opacity: 1;
+            "
+            id="contactDesc"
+          >
+            Open to research collaborations, fieldwork opportunities,
+            conservation projects, and speaking engagements related to firefly
+            ecology and biodiversity conservation.
+          </p>
+        </div>
+        <div>
+          <div class="contact-item">
+            <div class="contact-icon">📍</div>
+            <div>
+              <div class="contact-lbl">Location</div>
+              <div class="contact-val">Balasore, Odisha, India</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">📧</div>
+            <div>
+              <div class="contact-lbl">Email</div>
+              <div class="contact-val">
+                <a href="mailto:ashutoshday90@gmail.com"
+                  >ashutoshday90@gmail.com</a
+                >
+              </div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">📞</div>
+            <div>
+              <div class="contact-lbl">Phone</div>
+              <div class="contact-val">
+                <a href="tel:+916372970772">+91 6372970772</a>
+              </div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">🔗</div>
+            <div>
+              <div class="contact-lbl">LinkedIn</div>
+              <div class="contact-val">
+                <a
+                  href="https://www.linkedin.com/in/ashutosh-dey-1b4a0b1ab"
+                  target="_blank"
+                  >ashutosh-dey-1b4a0b1ab</a
+                >
+              </div>
+            </div>
+          </div>
 
-<script>
-gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+          <div class="contact-item">
+            <div class="contact-icon">🔗</div>
+            <div>
+              <div class="contact-lbl">Research gate</div>
+              <div class="contact-val">
+                <a
+                  href="https://www.researchgate.net/profile/Ashutosh-Dey?ev=hdr_xprf"
+                  target="_blank"
+                  >researchgate.net</a
+                >
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </section>
 
-const dot = document.getElementById('cursorDot'), ring = document.getElementById('cursorRing');
-let mx=0,my=0,rx=0,ry=0;
-document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
-(function cursorLoop(){ rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12; dot.style.left=mx+'px'; dot.style.top=my+'px'; ring.style.left=rx+'px'; ring.style.top=ry+'px'; requestAnimationFrame(cursorLoop);})();
-document.querySelectorAll('a, button, .tag, .h-card, .exp-card, .conf-card, .pub-item').forEach(el=>{ el.addEventListener('mouseenter',()=>document.body.classList.add('hover-active')); el.addEventListener('mouseleave',()=>document.body.classList.remove('hover-active'));});
+    <footer>
+      <span class="footer-copy">© 2025 Ashutosh Dey · Wildlife Researcher</span
+      ><span class="footer-firefly"
+        >🪲 Illuminating biodiversity, one firefly at a time</span
+      >
+    </footer>
 
-let progress=0; const loaderBar=document.getElementById('loaderBar'), loaderPercent=document.getElementById('loaderPercent');
-const loaderTick=setInterval(()=>{ progress+=Math.random()*18; if(progress>=100){progress=100;clearInterval(loaderTick);} loaderBar.style.width=progress+'%'; loaderPercent.textContent=Math.floor(progress)+'%'; if(progress===100){ setTimeout(()=>{ gsap.to('#loader',{opacity:0,duration:.8,onComplete:()=>{document.getElementById('loader').style.display='none'; initAnimations();}}); },300); } },60);
+    <script>
+      gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
-ScrollTrigger.create({ trigger:'body', start:'top top', end:'bottom bottom', onUpdate:self=>document.getElementById('scrollProgress').style.width=(self.progress*100)+'%' });
-window.addEventListener('scroll',()=>document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>60));
+      const dot = document.getElementById("cursorDot"),
+        ring = document.getElementById("cursorRing");
+      let mx = 0,
+        my = 0,
+        rx = 0,
+        ry = 0;
+      document.addEventListener("mousemove", (e) => {
+        mx = e.clientX;
+        my = e.clientY;
+      });
+      (function cursorLoop() {
+        rx += (mx - rx) * 0.12;
+        ry += (my - ry) * 0.12;
+        dot.style.left = mx + "px";
+        dot.style.top = my + "px";
+        ring.style.left = rx + "px";
+        ring.style.top = ry + "px";
+        requestAnimationFrame(cursorLoop);
+      })();
+      document
+        .querySelectorAll(
+          "a, button, .tag, .h-card, .exp-card, .conf-card, .pub-item",
+        )
+        .forEach((el) => {
+          el.addEventListener("mouseenter", () =>
+            document.body.classList.add("hover-active"),
+          );
+          el.addEventListener("mouseleave", () =>
+            document.body.classList.remove("hover-active"),
+          );
+        });
 
-document.querySelectorAll('a[href^="#"]').forEach(a=>{ a.addEventListener('click',e=>{ const target=document.querySelector(a.getAttribute('href')); if(!target)return; e.preventDefault(); gsap.to(window,{scrollTo:{y:target,offsetY:80},duration:1.2,ease:'power3.inOut'}); if(window.innerWidth<=1000){ document.getElementById('navLinks').classList.remove('open'); document.getElementById('menuIcon').classList.remove('open'); } }); });
+      let progress = 0;
+      const loaderBar = document.getElementById("loaderBar"),
+        loaderPercent = document.getElementById("loaderPercent");
+      const loaderTick = setInterval(() => {
+        progress += Math.random() * 18;
+        if (progress >= 100) {
+          progress = 100;
+          clearInterval(loaderTick);
+        }
+        loaderBar.style.width = progress + "%";
+        loaderPercent.textContent = Math.floor(progress) + "%";
+        if (progress === 100) {
+          setTimeout(() => {
+            gsap.to("#loader", {
+              opacity: 0,
+              duration: 0.8,
+              onComplete: () => {
+                document.getElementById("loader").style.display = "none";
+                initAnimations();
+              },
+            });
+          }, 300);
+        }
+      }, 60);
 
-const particlesContainer=document.getElementById('particles'); for(let i=0;i<45;i++){ const p=document.createElement('div'); p.className='particle'; p.style.left=Math.random()*100+'vw'; p.style.top=(30+Math.random()*70)+'vh'; p.style.width=p.style.height=(2+Math.random()*3)+'px'; particlesContainer.appendChild(p); gsap.to(p,{ y:-(200+Math.random()*400), x:(Math.random()-.5)*100, opacity:gsap.utils.random(.4,.9), scale:gsap.utils.random(.8,2), duration:8+Math.random()*12, repeat:-1, delay:Math.random()*15, ease:'none', onRepeat:function(){ gsap.set(this.targets()[0],{x:0,opacity:0}); } }); }
+      ScrollTrigger.create({
+        trigger: "body",
+        start: "top top",
+        end: "bottom bottom",
+        onUpdate: (self) =>
+          (document.getElementById("scrollProgress").style.width =
+            self.progress * 100 + "%"),
+      });
+      window.addEventListener("scroll", () =>
+        document
+          .getElementById("navbar")
+          .classList.toggle("scrolled", window.scrollY > 60),
+      );
 
-function initAnimations(){
-  gsap.to('#heroBg',{ yPercent:30, ease:'none', scrollTrigger:{ trigger:'#hero', start:'top top', end:'bottom top', scrub:true } });
-  const heroTl=gsap.timeline({defaults:{ease:'power3.out'}});
-  heroTl.to('#heroTag',{opacity:1,y:0,duration:.8,delay:.1}).to('#heroLine1',{y:'0%',duration:1,ease:'expo.out'},'-=.3').to('#heroLine2',{y:'0%',duration:1,ease:'expo.out'},'-=.7').to('#heroTitle',{opacity:.8,y:0,duration:.8},'-=.4').to('#heroDesc',{opacity:1,y:0,duration:.8},'-=.5').to('#heroCta',{opacity:1,y:0,duration:.8},'-=.5').to('#heroScroll',{opacity:.65,duration:.8},'-=.3');
-  gsap.to('.scroll-line',{scaleX:1.4,duration:1.2,ease:'power1.inOut',repeat:-1,yoyo:true});
-  ScrollTrigger.create({ trigger:'#statsStrip', start:'top 80%', once:true, onEnter:()=>{ document.querySelectorAll('.stat-num').forEach(el=>{ const target=parseInt(el.dataset.count); gsap.to({val:0},{ val:target, duration:2, ease:'power2.out', onUpdate:function(){ el.textContent=Math.ceil(this.targets()[0].val)+'+'; } }); }); gsap.from('.stat-item',{opacity:0,y:30,stagger:.15,duration:.8}); } });
-  gsap.timeline({ scrollTrigger:{ trigger:'#about', start:'top 65%', toggleActions:'play none none none' } }).from('#aboutImg',{ clipPath:'inset(100% 0 0 0)', duration:1.2 }).to('#aboutFrame',{scale:1,duration:.8,transformOrigin:'top left'},'-=.6').to('#aboutBadge',{scale:1,rotation:0,duration:.7},'-=.3').to('.about-text',{opacity:1,y:20,stagger:.2,duration:.5},'-=.2').to('#about .divider',{width:60,duration:.8},'-=.3');
-  gsap.to('.tag',{ opacity:1, y:0, stagger:.08, duration:.6, scrollTrigger:{ trigger:'#tagsWrap', start:'top 80%', once:true } });
-  gsap.timeline({ scrollTrigger:{ trigger:'#experience', start:'top 70%', once:true } }).from('#experience .section-label',{opacity:0,x:-20}).from('#experience .section-title',{opacity:0,y:30,duration:.8},'-=.3').to('#experience .divider',{width:60,duration:.8},'-=.4').to('.exp-card',{opacity:1,y:0,stagger:.2,duration:1},'-=.3');
-  const track=document.getElementById('hScrollTrack'), outer=document.getElementById('h-scroll-outer'), inner=document.getElementById('h-scroll-inner'); const trackWidth=track.scrollWidth, viewW=window.innerWidth, scrollDist=trackWidth-viewW+200; outer.style.height=(inner.offsetHeight+scrollDist)+'px';
-  gsap.to(track,{ x:-(scrollDist), ease:'none', scrollTrigger:{ trigger:outer, start:'top top', end:'+='+scrollDist, pin:inner, scrub:1, anticipatePin:1, onUpdate:self=>{ document.getElementById('hProgressFill').style.width=(self.progress*100)+'%'; document.getElementById('hProgressLabel').textContent=self.progress>.05?Math.round(self.progress*100)+'%':'Drag to explore'; } } });
-  gsap.from('.h-card',{ opacity:0, y:40, stagger:.15, duration:.8, scrollTrigger:{ trigger:outer, start:'top 80%', once:true } });
-  gsap.timeline({ scrollTrigger:{ trigger:'#publications', start:'top 70%', once:true } }).from('#publications .section-label',{opacity:0,x:-20}).from('#publications .section-title',{opacity:0,y:30},'-=.3').to('#publications .divider',{width:60},'-=.4').to('.pub-item',{opacity:1,x:0,stagger:.15,duration:.9},'-=.3');
-  gsap.timeline({ scrollTrigger:{ trigger:'#conferences', start:'top 70%', once:true } }).from('#conferences .section-label',{opacity:0,x:-20}).from('#conferences .section-title',{opacity:0,y:30},'-=.3').to('#conferences .divider',{width:60},'-=.4').to('.conf-card',{opacity:1,y:0,scale:1,stagger:.18,duration:1},'-=.3');
-  gsap.timeline({ scrollTrigger:{ trigger:'#skills', start:'top 70%', once:true } }).from('#skills .section-label',{opacity:0,x:-20}).from('#skills .section-title',{opacity:0,y:30},'-=.3').to('#skills .divider',{width:60},'-=.4').to('#skillsVisual',{opacity:1,scale:1,duration:1},'-=.4').to('.skill-label',{opacity:1,x:0,stagger:.1,duration:.6},'-=.6');
-  ScrollTrigger.create({ trigger:'#skillBars', start:'top 75%', once:true, onEnter:()=>{ document.querySelectorAll('.skill-fill').forEach((fill,i)=>{ gsap.to(fill,{ width:fill.dataset.width+'%', duration:1.4, delay:i*.1, ease:'power3.out' }); }); } });
-  gsap.timeline({ scrollTrigger:{ trigger:'#contact', start:'top 70%', once:true } }).from('#contact .section-label',{opacity:0,x:-20}).from('#contact .section-title',{opacity:0,y:30},'-=.3').to('#contact .divider',{width:60},'-=.4').to('.contact-item',{opacity:1,x:0,stagger:.15,duration:.8},'-=.3');
-  gsap.from('footer',{ opacity:0, y:20, duration:.8, scrollTrigger:{ trigger:'footer', start:'top 90%', once:true } });
-  document.querySelectorAll('.divider:not(#about .divider):not(#experience .divider):not(#publications .divider):not(#conferences .divider):not(#skills .divider):not(#contact .divider)').forEach(d=>{ gsap.to(d,{ width:60, scrollTrigger:{ trigger:d, start:'top 85%', once:true } }); });
-  document.querySelectorAll('.conf-card, .exp-card, .h-card').forEach(card=>{ card.addEventListener('mousemove',e=>{ const r=card.getBoundingClientRect(); const x=((e.clientX-r.left)/r.width-.5)*8; const y=((e.clientY-r.top)/r.height-.5)*-8; gsap.to(card,{ rotateX:y, rotateY:x, duration:.4, transformPerspective:800 }); }); card.addEventListener('mouseleave',()=>{ gsap.to(card,{ rotateX:0, rotateY:0, duration:.6, ease:'elastic.out(1,.6)' }); }); });
-}
-// Mobile Menu Logic
-const menuIcon=document.getElementById('menuIcon'), navLinks=document.getElementById('navLinks');
-menuIcon.addEventListener('click',()=>{ menuIcon.classList.toggle('open'); navLinks.classList.toggle('open'); });
-document.querySelectorAll('.nav-links a').forEach(link=>{ link.addEventListener('click',()=>{ if(window.innerWidth<=1000){ menuIcon.classList.remove('open'); navLinks.classList.remove('open'); } }); });
-// Fix Explore Research button (ensuring correct projects section scroll)
-document.getElementById('exploreResearchBtn')?.addEventListener('click',(e)=>{ e.preventDefault(); const projectsSection = document.querySelector('#h-scroll-outer'); if(projectsSection){ gsap.to(window, { scrollTo: { y: projectsSection, offsetY: 80 }, duration: 1.2, ease: 'power3.inOut' }); } else { const fallback = document.getElementById('projects'); if(fallback) gsap.to(window,{scrollTo:{y:fallback,offsetY:80},duration:1.2}); } });
-</script>
-</body>
+      document.querySelectorAll('a[href^="#"]').forEach((a) => {
+        a.addEventListener("click", (e) => {
+          const target = document.querySelector(a.getAttribute("href"));
+          if (!target) return;
+          e.preventDefault();
+          gsap.to(window, {
+            scrollTo: { y: target, offsetY: 80 },
+            duration: 1.2,
+            ease: "power3.inOut",
+          });
+          if (window.innerWidth <= 1000) {
+            document.getElementById("navLinks").classList.remove("open");
+            document.getElementById("menuIcon").classList.remove("open");
+          }
+        });
+      });
+
+      const particlesContainer = document.getElementById("particles");
+      for (let i = 0; i < 45; i++) {
+        const p = document.createElement("div");
+        p.className = "particle";
+        p.style.left = Math.random() * 100 + "vw";
+        p.style.top = 30 + Math.random() * 70 + "vh";
+        p.style.width = p.style.height = 2 + Math.random() * 3 + "px";
+        particlesContainer.appendChild(p);
+        gsap.to(p, {
+          y: -(200 + Math.random() * 400),
+          x: (Math.random() - 0.5) * 100,
+          opacity: gsap.utils.random(0.4, 0.9),
+          scale: gsap.utils.random(0.8, 2),
+          duration: 8 + Math.random() * 12,
+          repeat: -1,
+          delay: Math.random() * 15,
+          ease: "none",
+          onRepeat: function () {
+            gsap.set(this.targets()[0], { x: 0, opacity: 0 });
+          },
+        });
+      }
+
+      function initAnimations() {
+        gsap.to("#heroBg", {
+          yPercent: 30,
+          ease: "none",
+          scrollTrigger: {
+            trigger: "#hero",
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
+          },
+        });
+        const heroTl = gsap.timeline({ defaults: { ease: "power3.out" } });
+        heroTl
+          .to("#heroTag", { opacity: 1, y: 0, duration: 0.8, delay: 0.1 })
+          .to("#heroLine1", { y: "0%", duration: 1, ease: "expo.out" }, "-=.3")
+          .to("#heroLine2", { y: "0%", duration: 1, ease: "expo.out" }, "-=.7")
+          .to("#heroTitle", { opacity: 0.8, y: 0, duration: 0.8 }, "-=.4")
+          .to("#heroDesc", { opacity: 1, y: 0, duration: 0.8 }, "-=.5")
+          .to("#heroCta", { opacity: 1, y: 0, duration: 0.8 }, "-=.5")
+          .to("#heroScroll", { opacity: 0.65, duration: 0.8 }, "-=.3");
+        gsap.to(".scroll-line", {
+          scaleX: 1.4,
+          duration: 1.2,
+          ease: "power1.inOut",
+          repeat: -1,
+          yoyo: true,
+        });
+        ScrollTrigger.create({
+          trigger: "#statsStrip",
+          start: "top 80%",
+          once: true,
+          onEnter: () => {
+            document.querySelectorAll(".stat-num").forEach((el) => {
+              const target = parseInt(el.dataset.count);
+              gsap.to(
+                { val: 0 },
+                {
+                  val: target,
+                  duration: 2,
+                  ease: "power2.out",
+                  onUpdate: function () {
+                    el.textContent = Math.ceil(this.targets()[0].val) + "+";
+                  },
+                },
+              );
+            });
+            gsap.from(".stat-item", {
+              opacity: 0,
+              y: 30,
+              stagger: 0.15,
+              duration: 0.8,
+            });
+          },
+        });
+        gsap
+          .timeline({
+            scrollTrigger: {
+              trigger: "#about",
+              start: "top 65%",
+              toggleActions: "play none none none",
+            },
+          })
+          .from("#aboutImg", { clipPath: "inset(100% 0 0 0)", duration: 1.2 })
+          .to(
+            "#aboutFrame",
+            { scale: 1, duration: 0.8, transformOrigin: "top left" },
+            "-=.6",
+          )
+          .to("#aboutBadge", { scale: 1, rotation: 0, duration: 0.7 }, "-=.3")
+          .to(
+            ".about-text",
+            { opacity: 1, y: 20, stagger: 0.2, duration: 0.5 },
+            "-=.2",
+          )
+          .to("#about .divider", { width: 60, duration: 0.8 }, "-=.3");
+        gsap.to(".tag", {
+          opacity: 1,
+          y: 0,
+          stagger: 0.08,
+          duration: 0.6,
+          scrollTrigger: { trigger: "#tagsWrap", start: "top 80%", once: true },
+        });
+        gsap
+          .timeline({
+            scrollTrigger: {
+              trigger: "#experience",
+              start: "top 70%",
+              once: true,
+            },
+          })
+          .from("#experience .section-label", { opacity: 0, x: -20 })
+          .from(
+            "#experience .section-title",
+            { opacity: 0, y: 30, duration: 0.8 },
+            "-=.3",
+          )
+          .to("#experience .divider", { width: 60, duration: 0.8 }, "-=.4")
+          .to(
+            ".exp-card",
+            { opacity: 1, y: 0, stagger: 0.2, duration: 1 },
+            "-=.3",
+          );
+        const track = document.getElementById("hScrollTrack"),
+          outer = document.getElementById("h-scroll-outer"),
+          inner = document.getElementById("h-scroll-inner");
+        const trackWidth = track.scrollWidth,
+          viewW = window.innerWidth,
+          scrollDist = trackWidth - viewW + 200;
+        outer.style.height = inner.offsetHeight + scrollDist + "px";
+        gsap.to(track, {
+          x: -scrollDist,
+          ease: "none",
+          scrollTrigger: {
+            trigger: outer,
+            start: "top top",
+            end: "+=" + scrollDist,
+            pin: inner,
+            scrub: 1,
+            anticipatePin: 1,
+            onUpdate: (self) => {
+              document.getElementById("hProgressFill").style.width =
+                self.progress * 100 + "%";
+              document.getElementById("hProgressLabel").textContent =
+                self.progress > 0.05
+                  ? Math.round(self.progress * 100) + "%"
+                  : "Drag to explore";
+            },
+          },
+        });
+        gsap.from(".h-card", {
+          opacity: 0,
+          y: 40,
+          stagger: 0.15,
+          duration: 0.8,
+          scrollTrigger: { trigger: outer, start: "top 80%", once: true },
+        });
+        gsap
+          .timeline({
+            scrollTrigger: {
+              trigger: "#publications",
+              start: "top 70%",
+              once: true,
+            },
+          })
+          .from("#publications .section-label", { opacity: 0, x: -20 })
+          .from("#publications .section-title", { opacity: 0, y: 30 }, "-=.3")
+          .to("#publications .divider", { width: 60 }, "-=.4")
+          .to(
+            ".pub-item",
+            { opacity: 1, x: 0, stagger: 0.15, duration: 0.9 },
+            "-=.3",
+          );
+        gsap
+          .timeline({
+            scrollTrigger: {
+              trigger: "#conferences",
+              start: "top 70%",
+              once: true,
+            },
+          })
+          .from("#conferences .section-label", { opacity: 0, x: -20 })
+          .from("#conferences .section-title", { opacity: 0, y: 30 }, "-=.3")
+          .to("#conferences .divider", { width: 60 }, "-=.4")
+          .to(
+            ".conf-card",
+            { opacity: 1, y: 0, scale: 1, stagger: 0.18, duration: 1 },
+            "-=.3",
+          );
+        gsap
+          .timeline({
+            scrollTrigger: { trigger: "#skills", start: "top 70%", once: true },
+          })
+          .from("#skills .section-label", { opacity: 0, x: -20 })
+          .from("#skills .section-title", { opacity: 0, y: 30 }, "-=.3")
+          .to("#skills .divider", { width: 60 }, "-=.4")
+          .to("#skillsVisual", { opacity: 1, scale: 1, duration: 1 }, "-=.4")
+          .to(
+            ".skill-label",
+            { opacity: 1, x: 0, stagger: 0.1, duration: 0.6 },
+            "-=.6",
+          );
+        ScrollTrigger.create({
+          trigger: "#skillBars",
+          start: "top 75%",
+          once: true,
+          onEnter: () => {
+            document.querySelectorAll(".skill-fill").forEach((fill, i) => {
+              gsap.to(fill, {
+                width: fill.dataset.width + "%",
+                duration: 1.4,
+                delay: i * 0.1,
+                ease: "power3.out",
+              });
+            });
+          },
+        });
+        gsap
+          .timeline({
+            scrollTrigger: {
+              trigger: "#contact",
+              start: "top 70%",
+              once: true,
+            },
+          })
+          .from("#contact .section-label", { opacity: 0, x: -20 })
+          .from("#contact .section-title", { opacity: 0, y: 30 }, "-=.3")
+          .to("#contact .divider", { width: 60 }, "-=.4")
+          .to(
+            ".contact-item",
+            { opacity: 1, x: 0, stagger: 0.15, duration: 0.8 },
+            "-=.3",
+          );
+        gsap.from("footer", {
+          opacity: 0,
+          y: 20,
+          duration: 0.8,
+          scrollTrigger: { trigger: "footer", start: "top 90%", once: true },
+        });
+        document
+          .querySelectorAll(
+            ".divider:not(#about .divider):not(#experience .divider):not(#publications .divider):not(#conferences .divider):not(#skills .divider):not(#contact .divider)",
+          )
+          .forEach((d) => {
+            gsap.to(d, {
+              width: 60,
+              scrollTrigger: { trigger: d, start: "top 85%", once: true },
+            });
+          });
+        document
+          .querySelectorAll(".conf-card, .exp-card, .h-card")
+          .forEach((card) => {
+            card.addEventListener("mousemove", (e) => {
+              const r = card.getBoundingClientRect();
+              const x = ((e.clientX - r.left) / r.width - 0.5) * 8;
+              const y = ((e.clientY - r.top) / r.height - 0.5) * -8;
+              gsap.to(card, {
+                rotateX: y,
+                rotateY: x,
+                duration: 0.4,
+                transformPerspective: 800,
+              });
+            });
+            card.addEventListener("mouseleave", () => {
+              gsap.to(card, {
+                rotateX: 0,
+                rotateY: 0,
+                duration: 0.6,
+                ease: "elastic.out(1,.6)",
+              });
+            });
+          });
+      }
+      // Mobile Menu Logic
+      const menuIcon = document.getElementById("menuIcon"),
+        navLinks = document.getElementById("navLinks");
+      menuIcon.addEventListener("click", () => {
+        menuIcon.classList.toggle("open");
+        navLinks.classList.toggle("open");
+      });
+      document.querySelectorAll(".nav-links a").forEach((link) => {
+        link.addEventListener("click", () => {
+          if (window.innerWidth <= 1000) {
+            menuIcon.classList.remove("open");
+            navLinks.classList.remove("open");
+          }
+        });
+      });
+      // Fix Explore Research button (ensuring correct projects section scroll)
+      document
+        .getElementById("exploreResearchBtn")
+        ?.addEventListener("click", (e) => {
+          e.preventDefault();
+          const projectsSection = document.querySelector("#h-scroll-outer");
+          if (projectsSection) {
+            gsap.to(window, {
+              scrollTo: { y: projectsSection, offsetY: 80 },
+              duration: 1.2,
+              ease: "power3.inOut",
+            });
+          } else {
+            const fallback = document.getElementById("projects");
+            if (fallback)
+              gsap.to(window, {
+                scrollTo: { y: fallback, offsetY: 80 },
+                duration: 1.2,
+              });
+          }
+        });
+    </script>
+  </body>
 </html>
